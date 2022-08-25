@@ -7,3 +7,6 @@ def index(request):
 
 def create(request):
     return HttpResponse('Create call')
+
+def query(request):
+    return HttpResponse("Page query")

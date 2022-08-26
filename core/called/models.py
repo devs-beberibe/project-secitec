@@ -8,3 +8,12 @@ class Secretary(models.Model):
     def __str__(self):
         return self.name
 
+class Call(models.Model):
+
+    secretary_sector= models.ForeignKey(Secretary, on_delete=models.CASCADE) 
+    problem = models.TextField(max_length=250)
+    requester = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return self.secretary_sector
+

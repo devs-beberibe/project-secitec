@@ -1,10 +1,9 @@
 
-from multiprocessing import context
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 # Create your views here.
 
-from .models import Secretary
+from .models import Secretary, Call
 
 def index(request):
     return render(request, 'called/index.html')
@@ -14,5 +13,6 @@ def create(request):
     context = { 'list_secretary' : list_secretary}
     return render(request, 'called/create.html', context)
 
-def query(request):
-    return render(request, 'called/query.html')
+def query(request, call_id):
+    call = get_object_or_404(Call, pk=call_id)
+    return render(request, 'called/query.html', {'call' : call})

@@ -7,7 +7,7 @@ def index(request):
     return render(request, 'called/index.html')
 
 def create(request):
-    return HttpResponse('Create call')
+    return render(request, 'called/create.html')
 
 def query(request):
-    return HttpResponse("Page query")
+    return render(request, 'called/query.html')

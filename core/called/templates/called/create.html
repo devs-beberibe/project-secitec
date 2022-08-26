@@ -20,17 +20,27 @@
         <form action="" method="POST">
         <h2>Criação de Chamado</h2>      
         <label for="POST-secretary">Secretaria/Setor</label>
+
             <select name="secretary" id="POST-secretary">
                 <option value="-----">--</option>
-            </select>
-            <br>
+                
+                {% if list_secretary %}
+                    {% for sec in list_secretary %}
+
+                        <option value="{{ sec.id }}">{{ sec.name }}</option>
+                        
+                        {% endfor %}
+                {% endif %}
+                        
+                    </select>
+                    <br>
+
+            <label for="POST-requester">Requisitante</label>
+            <input type="text" id="POST-requester" name="requester">
 
             <label for="POST-problem">Problema</label><br>
             <textarea name="problem" id="POST-problem" cols="30" rows="10">Digite o seu problema</textarea>
             <br>
-
-            <label for="POST-requester">Requisitante</label>
-            <input type="text" id="POST-requester" name="requester">
         </form> 
         <script src="" async defer></script>
     </body>

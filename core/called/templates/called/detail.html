@@ -7,7 +7,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Consultar</title>
+        <title>Detalhes do chamado</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="">
@@ -16,18 +16,17 @@
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-        {% if list_called %}
-        <ul>
-        {% for call in list_called %}
-           <li><a href="{% url 'detail' call.id %}">{{call.secretary_sector}} {{call.problem}}</a></li>        
-        {% endfor %}
-        </ul>
-
+        {% if call %}
+        <h1>Chamado de ID: {{call.id}}</h1>
+        <p>Secretaria/Chamado: {{ call.secretary_sector }}</p>
+        <p>Requisitante: {{ call.requester }}</p>
+        <p>Problema: {{ call.problem }}</p>
+        <p></p>
         {% else %}
-            <h1>No done!</h1>
+        <h1>No done!</h1>
         {% endif %} 
+    
         
-
         <script src="" async defer></script>
     </body>
 </html>

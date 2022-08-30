@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Criar</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        <h1>SECITEC</h1>      
+        <form action="{% url 'create' %}" method="post">
+        {% csrf_token %}
+        <h2>Criação de Chamado</h2>      
+        <label for="POST-secretary">Secretaria/Setor</label>
+
+            <select name="secretary" id="POST-secretary">
+                <option value="-----">--</option>
+                
+                {% if list_secretary %}
+                    {% for sec in list_secretary %}
+
+                        <option value="{{ sec.id }}">{{ sec.name }}</option>
+                        
+                        {% endfor %}
+                {% endif %}
+                        
+            </select>
+            <br>
+
+            <label for="POST-requester">Requisitante</label>
+            <input type="text" id="POST-requester" name="requester">
+
+            <label for="POST-problem">Problema</label><br>
+            <textarea name="problem" id="POST-problem" cols="30" rows="10" placehoder="ola">Digite o seu problema</textarea>
+            <br>
+
+            <button type="submit">Enviar Chamado</button>
+        </form> 
+        <script src="" async defer></script>
+    </body>
+</html>

@@ -3,34 +3,32 @@
 {% block title %}Criar{% endblock title %}
 
 {% block content %}
-<h1>SECITEC</h1>      
-<form action="{% url 'create' %}" method="post">
-    {% csrf_token %}
-    <h2>Criação de Chamado</h2>      
-    <label for="POST-secretary">Secretaria/Setor</label>
+<main class="container">
 
-            <select name="secretary" id="POST-secretary">
-                <option value="-----">--</option>
-                
-                {% if list_secretary %}
-                    {% for sec in list_secretary %}
-                    
-                        <option value="{{ sec.id }}">{{ sec.name }}</option>
-                        
-                        {% endfor %}
-                {% endif %}
-                
-            </select>
-            <br>
-            
-            <label for="POST-requester">Requisitante</label>
-            <input type="text" id="POST-requester" name="requester">
-            
-            <label for="POST-problem">Problema</label><br>
-            <textarea name="problem" id="POST-problem" cols="30" rows="10" placehoder="ola">Digite o seu problema</textarea>
-            <br>
-            
-            <button type="submit">Enviar Chamado</button>
-        </form> 
+    <h1>Fazer Chamado</h1>
+    <p>Preencha os campos abaixo para realizar o chamdo.</p>
+    <form>
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Secretária
+                        Setor</label>
+            <select class="form-select form-select-sm" aria-label=".form-select-sm example">
+                        <option selected>Escolha</option>
+                        <option value="1">One</option>
+                        <option value="3">Three</option>
+                    </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Quem é
+                        vc?</label>
+            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">Qual
+                        é o problema?</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Enviar</button>
+    </form>
+</main>
 {% endblock content %}
-

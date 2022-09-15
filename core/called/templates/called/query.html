@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -10,23 +11,50 @@
         <title>Consultar</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
+        <!-- CSS only -->
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        <link rel="stylesheet" href="{% static 'css/query.css' %}">
+
     </head>
     <body>
+        <header>
+            <nav>
+              <a class="logo" href="/">SECITEC</a>
+              <div class="mobile-menu">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
+              </div>
+              <ul class="nav-list">
+                <li><a href="#">Início</a></li>
+                <li><a href="#">Sobre</a></li>
+                <li><a href="#">Pesquisa</a></li>
+                <li><a href="#">Cadastro</a></li>
+              </ul>
+            </nav>
+        </header>
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-        {% if list_called %}
-        <ul>
-        {% for call in list_called %}
-           <li><a href="{% url 'detail' call.id %}">{{call.secretary_sector}} {{call.problem}}</a></li>        
-        {% endfor %}
-        </ul>
+    <div id="main">
 
+        {% if list_called %}
+      
+        {% for call in list_called %}
+    
+            <div class="card-content" >
+                <h1>{{ call.secretary_sector }}</h1>
+                <p>{{ call.requester }}</p>
+                <p>{{ call.problem }}</p>
+                <button>Resolvido</button>
+            </div>
+    
+        {% endfor %}
+    
         {% else %}
             <h1>No done!</h1>
-        {% endif %} 
-        
+        {% endif %}      
+    </div> 
 
         <script src="" async defer></script>
     </body>

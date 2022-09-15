@@ -16,5 +16,5 @@ class Call(models.Model):
     
     def __str__(self):
         #return self.problem
-        return Secretary.objects.get(id=1).name, self.problem
+        return Secretary.objects.get(id=1).name
     

@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -10,14 +11,36 @@
         <title>Home</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
     </head>
-    <body>
-        <!--[if lt IE 7]>
-            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
-        <h1>SECITEC</h1>
-        <a href="{% url 'index' %}">Chamados</a>
-        <script src="" async defer></script>
-    </body>
+    
+  <body>
+    <header>
+      <nav>
+        <a class="logo" href="/">SECITEC</a>
+        <div class="mobile-menu">
+          <div class="line1"></div>
+          <div class="line2"></div>
+          <div class="line3"></div>
+        </div>
+        <ul class="nav-list">
+          <li><a href="#">Início</a></li>
+          <li><a href="#">Sobre</a></li>
+          <li><a href="#">Pesquisa</a></li>
+          <li><a href="#">Cadastro</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+
+      <div class="botao">
+        <ul class="action">
+          <li><div class="button"><a href="{% url 'create_page' %}"><span>Abrir Chamado</span></a></div></li>
+          <li><div class="button"><a href="{% url 'query' %}"><span>Consultar Chamado</span></a></div></li>
+        </ul>
+      </div>
+
+    </main>
+    <script src="{% static 'mobile-navbar.js' %}"></script>
+  </body>
 </html>

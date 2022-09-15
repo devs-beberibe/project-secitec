@@ -31,8 +31,8 @@ def create(request):
         #return HttpResponse("Postagem bem sucedida seu chamado é o {}".format(call.id))
         return render(request, "called/success.html", {'id' : call.id})
     return HttpResponse("Método não permitido", status=403)
-    ''
 
 def query(request):
     calleds = Call.objects.all()
     return render(request, 'called/query.html', {'list_called' : calleds})
+

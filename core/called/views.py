@@ -21,8 +21,10 @@ def detail(request, call_id):
 def create(request):
     if request.method == 'POST':
         call = Call()
-        #call.secretary_sector=request.POST['secretary']
-        call.secretary_sector=Secretary.objects.get(id=request.POST['secretary'])
+        call.secretary_sector=Secretary.objects.filter(pk=request.POST['secretary'])
+        print(
+            call.secretary_sector
+        )
         call.requester=request.POST['requester'] 
         call.problem=request.POST['problem'] 
 
@@ -35,4 +37,8 @@ def create(request):
 def query(request):
     calleds = Call.objects.all()
     return render(request, 'called/query.html', {'list_called' : calleds})
+
+def adit_status(request, id):
+    called = get_object_or_404(Call, id)
+    
 

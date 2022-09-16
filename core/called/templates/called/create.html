@@ -7,26 +7,32 @@
 
     <h1>Fazer Chamado</h1>
     <p>Preencha os campos abaixo para realizar o chamdo.</p>
-    <form>
+    <form action="{% url 'create' %}" method="post">
+    {% csrf_token %}
         <div class="mb-3">
             <label for="exampleInputEmail1" class="form-label">Secretária
                         Setor</label>
-            <select class="form-select form-select-sm" aria-label=".form-select-sm example">
+            <select name="secretery" class="form-select form-select-sm" aria-label=".form-select-sm example">
                         <option selected>Escolha</option>
-                        <option value="1">One</option>
-                        <option value="3">Three</option>
+                        {% if list_secretary %}
+                        {% for sec in list_secretary %}
+    
+                            <option value="{{ sec.id }}">{{ sec.name }}</option>
+                            
+                            {% endfor %}
+                    {% endif %}
                     </select>
         </div>
 
         <div class="mb-3">
             <label for="exampleFormControlInput1" class="form-label">Quem é
                         vc?</label>
-            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+            <input name="requester" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
         </div>
         <div class="mb-3">
             <label for="exampleFormControlTextarea1" class="form-label">Qual
                         é o problema?</label>
-            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+            <textarea name="problem" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
         </div>
         <button type="submit" class="btn btn-primary">Enviar</button>
     </form>

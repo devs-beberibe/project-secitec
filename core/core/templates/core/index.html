@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -14,7 +15,7 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <a class="navbar-brand" href="./index.html">SECITEC</a>
 
-      <a href="./us.html">
+      <a href=" {% url 'query' %} ">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-door-open-fill" viewBox="0
                     0 16 16">
           <path d="M1.5 15a.5.5 0 0 0 0 1h13a.5.5 0 0 0 0-1H13V2.5A1.5
@@ -26,14 +27,15 @@
       </a>
     </nav>
 
-    <main class="container"">
+    <main class="container" style="background: url("../assets/praia-das-fontes.jpg") no-repeat center center;">
       <span>
         <div class="jumbotron">
           <h1 class="display-4">Olá, beberibenses!</h1>
           <p class="lead">Nós somos a SECITEC estamos aqui para te ajudar.</p>
           <hr class="my-4" />
           <p>Para realizar uma chamado clique no botão abaixo</p>
-          <a class="btn btn-primary btn-lg" href="{% url 'index' %}" role="button">Fazer chamado</a>
+          <a class="btn btn-primary btn-lg" href="{% url 'create_page' %}" role="button">Fazer chamado</a>
+          <a class="btn btn-primary btn-lg" href="{% url 'query' %}" role="button">Consutar chamado</a>
         </div>
       </span>
     </main>

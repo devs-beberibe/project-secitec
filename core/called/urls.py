@@ -8,6 +8,6 @@ urlpatterns = [
     path('criar/add/', views.create, name='create'),
     path('listar/', views.list, name='list'),
     path('consultar/', views.query, name='query'),
-    path('consultar/<int:call_id>', views.detail, name='detail'),
+    path('consultar/detales', views.detail, name='detail'),
     
 ]

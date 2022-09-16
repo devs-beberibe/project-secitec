@@ -6,7 +6,7 @@
     
 <main>
     <section class="container">
-        <form action="{% url 'detail' 1 %}" method="get">
+        <form action="{% url 'detail' %}" method="get">
         {% csrf_token %}
         <div class="mb-3">
             <label for="exampleFormControlInput1" class="form-label">Número do Chamado</label>

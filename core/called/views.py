@@ -34,11 +34,15 @@ def create(request):
         return render(request, "called/success.html", {'id' : call.id})
     return HttpResponse("Método não permitido", status=403)
 
-def query(request):
+def list(request):
     calleds = Call.objects.all()
-    return render(request, 'called/query.html', {'list_called' : calleds})
-
-def adit_status(request, id):
+    return render(request, 'called/list.html', {'list_called' : calleds})
+'''
+def edit_status(request, id):
     called = get_object_or_404(Call, id)
+'''
+
+def query(request):
+    return render(request, 'called/query.html') 
     
 

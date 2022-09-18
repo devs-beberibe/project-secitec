@@ -16,8 +16,10 @@
 
   <body>
     <!-- url("img/image.svg") no-repeat center center-->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="./index.html">SECITEC</a>
+    <nav class="navbar navbar-expand-lg d-flex justify-content-between">
+      <a class="navbar-brand" href="./index.html">
+        <img id="logo" src="../../static/img/logo.svg" alt="SECITEC">
+      </a>
 
       <a href=" {% url 'list' %} ">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-door-open-fill" viewBox="0
@@ -33,7 +35,7 @@
 
     <main class="container">
       <span>
-        <div class="jumbotron">
+        <div class="jumbotron ">
           <h1 class="display-4">Olá, beberibenses!</h1>
           <p class="lead">Nós somos a SECITEC estamos aqui para te ajudar.</p>
           <hr class="my-4" />

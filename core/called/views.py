@@ -23,10 +23,7 @@ def detail(request):
 def create(request):
     if request.method == 'POST':
         call = Call()
-        call.secretary_sector=Secretary.objects.filter(pk=request.POST['secretary'])
-        print(
-            call.secretary_sector
-        )
+        call.secretary_sector=request.POST['secretary']
         call.requester=request.POST['requester'] 
         call.problem=request.POST['problem'] 
 

@@ -1,16 +1,19 @@
 {% extends 'base.html' %}
 
-{% block title %}Detalhe{% endblock title %}
+{% block title %}Detalhe{% endblock %}
 
 {% block content %}
-{% if call %}
-    <h1>Chamado de ID: {{call.id}}</h1>
-    <p>Secretaria/Chamado: {{ call.secretary_sector }}</p>
-    <p>Requisitante: {{ call.requester }}</p>
-    <p>Problema: {{ call.problem }}</p>
-    <p></p>
-    {% else %}
+  {% if call %}
+    <div class="container col-sm-6 col-md-4 col-lg-3">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{ call.secretary_sector }}</h5>
+          <p class="card-text">{{ call.problem }}</p>
+          <p class="card-text">{{ call.status }}</p>
+        </div>
+      </div>
+    </div>
+  {% else %}
     <h1>No done!</h1>
-    {% endif %}
-{% endblock content %}
-
+  {% endif %}
+{% endblock %}

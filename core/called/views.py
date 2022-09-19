@@ -1,4 +1,5 @@
 
+from ast import Return
 import re
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
@@ -16,7 +17,7 @@ def create_page(request):
 
 def detail(request):
     call_id = request.GET['call_id']
-    call = get_object_or_404(Call, pk=call_id) 
+    call = get_object_or_404(Call, pk=call_id)
     return render(request, 'called/detail.html',{'call' : call})
 
 def create(request):
@@ -38,10 +39,11 @@ def create(request):
 def list(request):
     calleds = Call.objects.all()
     return render(request, 'called/list.html', {'list_called' : calleds})
-'''
+
 def edit_status(request, id):
     called = get_object_or_404(Call, id)
-'''
+    return HttpResponse('Ok') 
+
 
 def query(request):
     return render(request, 'called/query.html') 

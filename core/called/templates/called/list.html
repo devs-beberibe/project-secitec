@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Listagem{% endblock title %}
+
+{% block content %}
+    
+<main>
+    <section class="container">
+
+        {% if list_called %}
+        <div class="row">
+        {% for call in list_called %}
+            <div class="col-sm-6 col-md-4 col-lg-3 ">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Número do chamado: {{call.id}}</h5>
+                        <h5 class="card-subtitle">{{call.secretary_sector}}</h5>
+                        <p class="card-text">{{call.problem}}</p>
+                        <p class="card-text">{{call.requester}}</p>
+                        <p class="card-text">{{call.status}}</p>
+                        <form action="{% url 'edit' call.id %}" method="post">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <select name="status" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                    <option selected value="OPN">Aberto</option>
+                                    <option value="IMP">Em andamento</option>
+                                    <option value="CLS">Encerado</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Altera</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <h1>Sem chamados</h1>
+        {% endif %} 
+    </section>
+</main>
+    
+{% endblock content %}

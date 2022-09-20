@@ -41,11 +41,8 @@ def list(request):
 def edit_status(request, id):
     called = get_object_or_404(Call, pk=id)
     called.status = request.POST["status"]
-    called.refresh_from_db()
-    return HttpResponse(
-        "Id: {} Status: {} call {}"
-            .format(id, request.POST["status"], called.status)    
-        ) 
+    called.save()
+    return list(request)
 
 
 def query(request):

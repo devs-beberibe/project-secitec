@@ -1,6 +1,7 @@
 
 from ast import Return
 import re
+from subprocess import call
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 # Create your views here.
@@ -17,7 +18,8 @@ def create_page(request):
 
 def detail(request):
     call_id = request.GET['call_id']
-    call = get_object_or_404(Call, pk=call_id)
+    #call = get_object_or_404(Call, pk=call_id)
+    call = Call.objects.filter(pk=call_id)
     return render(request, 'called/detail.html',{'call' : call})
 
 def create(request):

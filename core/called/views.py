@@ -18,9 +18,8 @@ def create_page(request):
 
 def detail(request):
     call_id = request.GET['call_id']
-    #call = get_object_or_404(Call, pk=call_id)
-    call = Call.objects.filter(pk=call_id)
-    return render(request, 'called/detail.html',{'call' : call})
+    call = Call.objects.filter(pk=call_id).get
+    return render(request, 'called/detail.html', {'call' : call})
 
 def create(request):
     if request.method == 'POST':

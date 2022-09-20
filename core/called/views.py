@@ -23,7 +23,7 @@ def detail(request):
 def create(request):
     if request.method == 'POST':
         call = Call()
-        call.secretary_sector=request.POST['secretary']
+        call.secretary_sector=Secretary.objects.get(pk=request.POST['secretary']).id
         call.requester=request.POST['requester'] 
         call.problem=request.POST['problem'] 
 
@@ -38,8 +38,13 @@ def list(request):
     return render(request, 'called/list.html', {'list_called' : calleds})
 
 def edit_status(request, id):
-    called = get_object_or_404(Call, id)
-    return HttpResponse('Ok') 
+    called = get_object_or_404(Call, pk=id)
+    called.status = request.POST["status"]
+    called.refresh_from_db()
+    return HttpResponse(
+        "Id: {} Status: {} call {}"
+            .format(id, request.POST["status"], called.status)    
+        ) 
 
 
 def query(request):

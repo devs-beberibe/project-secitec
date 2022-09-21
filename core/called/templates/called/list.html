@@ -17,12 +17,19 @@
                         <h5 class="card-subtitle">{{call.secretary_sector}}</h5>
                         <p class="card-text">{{call.problem}}</p>
                         <p class="card-text">{{call.requester}}</p>
-                        <p class="card-text">{{call.status}}</p>
+                        {% if call.status == "OPN" %}
+                            <div class="status status-open"></div>
+                        {% elif call.status == "IMP" %}
+                            <div class="status status-in-processor"></div>
+                        {% else %}
+                            <div class="status status-close"></div>
+                        {% endif %}
                         <form action="{% url 'edit' call.id %}" method="post">
                             {% csrf_token %}
                             <div class="mb-3">
                                 <select name="status" class="form-select form-select-sm" aria-label=".form-select-sm example">
-                                    <option selected value="OPN">Aberto</option>
+                                    <option selected>{{call.status}}</option>
+                                    <option value="OPN">Aberto</option>
                                     <option value="IMP">Em andamento</option>
                                     <option value="CLS">Encerado</option>
                                 </select>

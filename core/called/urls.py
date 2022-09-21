@@ -7,6 +7,7 @@ urlpatterns = [
     path('criar/', views.create_page, name='create_page'),
     path('criar/add/', views.create, name='create'),
     path('listar/', views.list, name='list'),
+    path('listar/OPC', views.list, name='list'),
     path('consultar/', views.query, name='query'),
     path('consultar/detales', views.detail, name='detail'),
     path('consultar/editar/<int:id>', views.edit_status, name='edit'),

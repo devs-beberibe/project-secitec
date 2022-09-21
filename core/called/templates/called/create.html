@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Criar{% endblock title %}
+
+{% block content %}
+<main class="container">
+    <div class="box">
+
+    <h1>Fazer Chamado</h1>
+    <p>Preencha os campos abaixo para realizar o chamdo.</p>
+    <form action="{% url 'create' %}" method="post">
+    {% csrf_token %}
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Secretária
+                        Setor</label>
+            <select name="secretery" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                        <option selected>Escolha</option>
+                        {% if list_secretary %}
+                        {% for sec in list_secretary %}
+    
+                            <option value="{{ sec.id }}">{{ sec.name }}</option>
+                            
+                            {% endfor %}
+                    {% endif %}
+                    </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Quem é
+                        vc?</label>
+            <input name="requester" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">Qual
+                        é o problema?</label>
+            <textarea name="problem" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Enviar</button>
+    </form>
+    </div>
+</main>
+{% endblock content %}

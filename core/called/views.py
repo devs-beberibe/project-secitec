@@ -1,8 +1,4 @@
-
-from ast import Return
-import re
 from subprocess import call
-from telnetlib import STATUS
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 # Create your views here.
@@ -35,15 +31,15 @@ def create(request):
         return render(request, "called/success.html", {'id' : call.id})
     return HttpResponse("Método não permitido", status=403)
 
-def list(request, status='OPN'):
-    calleds = Call.objects.filter(status=status)
+def list(request, stts):
+    calleds = Call.objects.filter(status=stts)
     return render(request, 'called/list.html', {'list_called' : calleds})
 
 def edit_status(request, id):
     called = get_object_or_404(Call, pk=id)
     called.status = request.POST["status"]
     called.save()
-    return list(request)
+    return list(request, 'OPN')
 
 
 def query(request):

@@ -1,3 +1,4 @@
+from sqlite3 import Row
 from subprocess import call
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
@@ -32,8 +33,12 @@ def create(request):
     return HttpResponse("Método não permitido", status=403)
 
 def list(request, stts):
-    calleds = Call.objects.filter(status=stts)
-    return render(request, 'called/list.html', {'list_called' : calleds})
+    for row in Call.STATUS_CALLED:
+        if row[1] == stts:
+            stts = row[0]
+    
+    called = Call.objects.filter(status=stts)
+    return render(request, 'called/list.html', {'list_called' : called})
 
 def edit_status(request, id):
     called = get_object_or_404(Call, pk=id)

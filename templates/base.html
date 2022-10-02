@@ -20,9 +20,10 @@
       <a class="navbar-brand" href="{% url 'home' %}">
         <img id="logo" src="../../static/img/logo.svg" alt="SECITEC">
       </a>
-
-      <a href=" {% url 'list' %} ">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-door-open-fill" viewBox="0
+      {% block nav_pages %}{% endblock nav_pages %}
+      
+      <a href=" {% url 'list' 'OPN' %} ">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-door-open-fill" viewBox="0
                     0 16 16">
           <path d="M1.5 15a.5.5 0 0 0 0 1h13a.5.5 0 0 0 0-1H13V2.5A1.5
                         1.5 0 0 0 11.5 1H11V.5a.5.5 0 0 0-.57-.495l-7 1A.5.5 0 0

@@ -1,6 +1,4 @@
-
-from ast import Return
-import re
+from sqlite3 import Row
 from subprocess import call
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
@@ -24,7 +22,7 @@ def detail(request):
 def create(request):
     if request.method == 'POST':
         call = Call()
-        call.secretary_sector=Secretary.objects.get(pk=request.POST['secretary']).id
+        call.secretary_sector=Secretary.objects.get(pk=request.POST['secretary'])
         call.requester=request.POST['requester'] 
         call.problem=request.POST['problem'] 
 
@@ -34,15 +32,19 @@ def create(request):
         return render(request, "called/success.html", {'id' : call.id})
     return HttpResponse("Método não permitido", status=403)
 
-def list(request):
-    calleds = Call.objects.all()
-    return render(request, 'called/list.html', {'list_called' : calleds})
+def list(request, stts):
+    for row in Call.STATUS_CALLED:
+        if row[1] == stts:
+            stts = row[0]
+    
+    called = Call.objects.filter(status=stts)
+    return render(request, 'called/list.html', {'list_called' : called})
 
 def edit_status(request, id):
     called = get_object_or_404(Call, pk=id)
     called.status = request.POST["status"]
     called.save()
-    return list(request)
+    return list(request, 'OPN')
 
 
 def query(request):

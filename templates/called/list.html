@@ -14,11 +14,9 @@
       <li class="nav-item">
         <a class="nav-link" href="{% url 'list' 'encerrado' %}">Encerados</a>
       </li>
-      {% if user.is_authenticated %}
       <li class="nav-item">
         <a class="nav-link" href="/accounts/logout">Sair</a>
       </li>
-      {% endif %}
     </ul>
   </div>
 {% endblock nav_pages %}

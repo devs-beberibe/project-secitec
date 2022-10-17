@@ -34,8 +34,8 @@
             <div class="col-sm-6 col-md-4 col-lg-3 ">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Número do chamado: {{call.id}}</h5>
                         <h5 class="card-subtitle">{{call.secretary_sector}}</h5>
+                        <h4 class="card-title">Número do chamado: {{call.id}}</h4>
                         <p class="card-text">{{call.problem}}</p>
                         <p class="card-text">{{call.requester}}</p>
                         {% if call.status == "OPN" %}

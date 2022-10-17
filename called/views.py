@@ -1,8 +1,8 @@
 from sqlite3 import Row
 from subprocess import call
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
-# Create your views here.
 
 from .models import Secretary, Call
 
@@ -32,6 +32,7 @@ def create(request):
         return render(request, "called/success.html", {'id' : call.id})
     return HttpResponse("Método não permitido", status=403)
 
+@login_required
 def list(request, stts):
     for row in Call.STATUS_CALLED:
         if row[1] == stts:

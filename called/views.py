@@ -28,16 +28,16 @@ def create(request):
 
         call.save()
         
-        #return HttpResponse("Postagem bem sucedida seu chamado é o {}".format(call.id))
         return render(request, "called/success.html", {'id' : call.id})
     return HttpResponse("Método não permitido", status=403)
 
-def list(request, stts):
+def list(request, stts, page):
+    
     for row in Call.STATUS_CALLED:
         if row[1] == stts:
             stts = row[0]
     
-    called = Call.objects.filter(status=stts)
+    called = Call.objects.filter(status=stts)[(page-1)*8:page*8]
     return render(request, 'called/list.html', {'list_called' : called})
 
 def edit_status(request, id):

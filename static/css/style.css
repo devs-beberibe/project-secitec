@@ -56,6 +56,13 @@ nav {
     justify-content: center;
 }
 
+.pages {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
 footer {
     position: relative;
     height: 1em;

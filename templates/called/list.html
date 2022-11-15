@@ -26,8 +26,12 @@
 {% block content %}
     
 <main>
+    <div id="pages">
+        <a  href="{% url 'list' 'aberto' 2 %}">Anterior</a>
+        <p>{{ page }}</p>
+        <a  href="{% url 'list' 'aberto' 1 %}">Proxima</a>
+    </div>
     <section class="container">
-
         {% if list_called %}
         <div class="row">
         {% for call in list_called %}

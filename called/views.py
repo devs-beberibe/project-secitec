@@ -38,7 +38,12 @@ def list(request, stts, page):
             stts = row[0]
     
     called = Call.objects.filter(status=stts)[(page-1)*8:page*8]
-    return render(request, 'called/list.html', {'list_called' : called})
+    return render(request, 'called/list.html', 
+            {
+                'list_called' : called,
+                'page': page,
+            }
+        )
 
 def edit_status(request, id):
     called = get_object_or_404(Call, pk=id)

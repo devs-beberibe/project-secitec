@@ -16,13 +16,13 @@
             <select name="secretary" class="form-select form-select-sm" aria-label=".form-select-sm example">
                         <option selected>Escolha</option>
                         {% if list_secretary %}
-                        {% for sec in list_secretary %}
+                    {% for sec in list_secretary %}
     
-                            <option value="{{ sec.id }}">{{ sec.name }}</option>
-                            
-                            {% endfor %}
-                    {% endif %}
-                    </select>
+                        <option value="{{ sec.id }}">{{ sec.name }}</option>
+                        
+                    {% endfor %}
+                {% endif %}
+            </select>
         </div>
 
         <div class="mb-3">

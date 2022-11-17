@@ -14,9 +14,9 @@ class Secretary(models.Model):
 class Call(models.Model):
     
     STATUS_CALLED = [
-        ('OPN', 'aberto'),
+        ('OPN', 'abertos'),
         ('IMP', 'emAndamento'),
-        ('CLS', 'encerrado'),
+        ('CLS', 'encerrados'),
     ]
 
     secretary_sector= models.ForeignKey(Secretary, on_delete=models.CASCADE) 

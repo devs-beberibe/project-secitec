@@ -29,7 +29,6 @@ def create(request):
         #return HttpResponse("Postagem bem sucedida seu chamado é o {}".format(call.id))
         return render(request, "called/information.html",
                 {
-                    'id' : call.id,
                     'title_info': f"Postagem bem sucedida seu chamado é o {call.id}",
                     'redirect' : '/',
                     'text_redirect' : "Voltar para Home"
@@ -52,7 +51,7 @@ def edit_status(request, id):
     # Caso o chamado seja encerrado ele não pode mais voltar 
     # para a listagem
     if (called.status == Call.STATUS_CALLED[2][0]):
-        return render(request,'called/information.html', {'title_info': 'Esse chamado ja está encerado'})
+        return render(request,'called/information.html', {'title_info': 'Esse chamado já está encerado'})
     
     called.status = request.POST["status"]
     

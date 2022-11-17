@@ -1,5 +1,3 @@
-from sqlite3 import Row
-from subprocess import call
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
@@ -29,7 +27,14 @@ def create(request):
         call.save()
         
         #return HttpResponse("Postagem bem sucedida seu chamado é o {}".format(call.id))
-        return render(request, "called/success.html", {'id' : call.id})
+        return render(request, "called/information.html",
+                {
+                    'id' : call.id,
+                    'title_info': f"Postagem bem sucedida seu chamado é o {call.id}",
+                    'redirect' : '/',
+                    'text_redirect' : "Voltar para Home"
+                }
+            )
     return HttpResponse("Método não permitido", status=403)
 
 @login_required
@@ -43,7 +48,14 @@ def list(request, stts):
 
 def edit_status(request, id):
     called = get_object_or_404(Call, pk=id)
+    
+    # Caso o chamado seja encerrado ele não pode mais voltar 
+    # para a listagem
+    if (called.status == Call.STATUS_CALLED[2][0]):
+        return render(request,'called/information.html', {'title_info': 'Esse chamado ja está encerado'})
+    
     called.status = request.POST["status"]
+    
     called.save()
     return list(request, 'OPN')
 

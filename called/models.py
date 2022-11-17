@@ -15,7 +15,7 @@ class Call(models.Model):
     
     STATUS_CALLED = [
         ('OPN', 'aberto'),
-        ('INP', 'executando'),
+        ('IMP', 'emAndamento'),
         ('CLS', 'encerrado'),
     ]
 
@@ -25,6 +25,5 @@ class Call(models.Model):
     status = models.CharField(max_length=3, choices=STATUS_CALLED, default='OPN')
     
     def __str__(self):
-        #return self.problem
         return Secretary.objects.get(pk=self.secretary_sector.id).name
     

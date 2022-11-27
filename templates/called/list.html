@@ -6,19 +6,17 @@
 <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'list' 'aberto' '1'%}">Abertos</a>
+        <a class="nav-link" href="{% url 'list' 'abertos' 1 %}">Abertos</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'list' 'executando' '1' %}">Em andamento</a>
+        <a class="nav-link" href="{% url 'list' 'emAndamento' 1 %}">Em andamento</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'list' 'encerrado' '1' %}">Encerados</a>
+        <a class="nav-link" href="{% url 'list' 'encerrados' 1%}">Encerados</a>
       </li>
-      <!--
-        <li class="nav-item">
-        <a class="nav-link disabled">Fechados</a>
+      <li class="nav-item">
+        <a class="nav-link" href="/accounts/logout">Sair</a>
       </li>
-      -->
     </ul>
   </div>
 {% endblock nav_pages %}
@@ -27,9 +25,9 @@
     
 <main>
     <div id="pages">
-        <a  href="{% url 'list' 'aberto' 2 %}">Anterior</a>
+        <a  href="{% url 'list' 'abertos' 2 %}">Anterior</a>
         <p>{{ page }}</p>
-        <a  href="{% url 'list' 'aberto' 1 %}">Proxima</a>
+        <a  href="{% url 'list' 'abertos' 1 %}">Proxima</a>
     </div>
     <section class="container">
         {% if list_called %}
@@ -38,8 +36,8 @@
             <div class="col-sm-6 col-md-4 col-lg-3 ">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Número do chamado: {{call.id}}</h5>
                         <h5 class="card-subtitle">{{call.secretary_sector}}</h5>
+                        <h4 class="card-title">Número do chamado: {{call.id}}</h4>
                         <p class="card-text">{{call.problem}}</p>
                         <p class="card-text">{{call.requester}}</p>
                         {% if call.status == "OPN" %}
@@ -49,18 +47,21 @@
                         {% else %}
                             <div class="status status-close"></div>
                         {% endif %}
-                        <form action="{% url 'edit' call.id %}" method="post">
+                        {% if call.status != 'CLS' %}
+                        <form action="{% url 'edit' call.id %}" method="post" class="row g-3">
                             {% csrf_token %}
-                            <div class="mb-3">
+                            <div  class="col-auto">
                                 <select name="status" class="form-select form-select-sm" aria-label=".form-select-sm example">
-                                    <option selected>{{call.status}}</option>
-                                    <option value="OPN">Aberto</option>
-                                    <option value="IMP">Em andamento</option>
+                                    <option select>Status</option>
+                                    {% if call.status != 'IMP' %}
+                                        <option value="IMP">Em andamento</option>
+                                    {% endif %}
                                     <option value="CLS">Encerado</option>
                                 </select>
                             </div>
-                            <button type="submit" class="btn btn-primary">Altera</button>
+                            <button type="submit" class="btn btn-primary col-auto">Altera</button>
                         </form>
+                        {% endif %}
                     </div>
                 </div>
             </div>

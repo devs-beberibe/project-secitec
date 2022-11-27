@@ -8,6 +8,7 @@ authors = ["41SergioF <carlossergio2401@outook.com>"]
 python = "^3.8"
 Django = "^4.1"
 python-decouple = "^3.6"
+django-crispy-forms = "^1.14.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

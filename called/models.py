@@ -14,9 +14,9 @@ class Secretary(models.Model):
 class Call(models.Model):
     
     STATUS_CALLED = [
-        ('OPN', 'aberto'),
-        ('INP', 'executando'),
-        ('CLS', 'encerrado'),
+        ('OPN', 'abertos'),
+        ('IMP', 'emAndamento'),
+        ('CLS', 'encerrados'),
     ]
 
     secretary_sector= models.ForeignKey(Secretary, on_delete=models.CASCADE) 
@@ -25,6 +25,5 @@ class Call(models.Model):
     status = models.CharField(max_length=3, choices=STATUS_CALLED, default='OPN')
     
     def __str__(self):
-        #return self.problem
         return Secretary.objects.get(pk=self.secretary_sector.id).name
     

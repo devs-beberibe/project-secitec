@@ -1,8 +1,6 @@
-from sqlite3 import Row
-from subprocess import call
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
-# Create your views here.
 
 from .models import Secretary, Call
 
@@ -28,11 +26,18 @@ def create(request):
 
         call.save()
         
-        return render(request, "called/success.html", {'id' : call.id})
+        #return HttpResponse("Postagem bem sucedida seu chamado é o {}".format(call.id))
+        return render(request, "called/information.html",
+                {
+                    'title_info': f"Postagem bem sucedida seu chamado é o {call.id}",
+                    'redirect' : '/',
+                    'text_redirect' : "Voltar para Home"
+                }
+            )
     return HttpResponse("Método não permitido", status=403)
 
+@login_required
 def list(request, stts, page):
-    
     for row in Call.STATUS_CALLED:
         if row[1] == stts:
             stts = row[0]
@@ -47,9 +52,17 @@ def list(request, stts, page):
 
 def edit_status(request, id):
     called = get_object_or_404(Call, pk=id)
+    
+    # Caso o chamado seja encerrado ele não pode mais voltar 
+    # para a listagem
+    if (called.status == Call.STATUS_CALLED[2][0]):
+        return render(request,'called/information.html',
+            {'title_info': 'Esse chamado já está encerado'})
+    
     called.status = request.POST["status"]
+    
     called.save()
-    return list(request, 'OPN')
+    return list(request, 'OPN', 1)
 
 
 def query(request):

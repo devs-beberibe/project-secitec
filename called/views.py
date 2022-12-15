@@ -62,7 +62,7 @@ def list(request, stts, page):
             }
         )
 
-def edit_status(request, id):
+def edit_status(request, id, status):
     called = get_object_or_404(Call, pk=id)
     
     # Caso o chamado seja encerrado ele não pode mais voltar 
@@ -71,7 +71,7 @@ def edit_status(request, id):
         return render(request,'called/information.html',
             {'title_info': 'Esse chamado já está encerado'})
     
-    called.status = request.POST["status"]
+    called.status = status
     
     called.save()
     return list(request, 'OPN', 1)

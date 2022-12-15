@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 # Create your models here.
 class Secretary(models.Model):
@@ -20,6 +21,7 @@ class Call(models.Model):
     problem = models.TextField(max_length=250)
     requester = models.CharField(max_length=100)
     status = models.CharField(max_length=3, choices=STATUS_CALLED, default='OPN')
+    date = models.DateField(default=timezone.now)
     
     def __str__(self):
         return Secretary.objects.get(pk=self.secretary_sector.id).name

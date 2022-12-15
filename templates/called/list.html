@@ -42,7 +42,10 @@
                     <div class="card-body">
                         <h5 class="card-subtitle">{{call.secretary_sector}}</h5>
                         <h4 class="card-title">Número do chamado: {{call.id}}</h4>
-                        <p class="card-text">Data de Criação: {{call.date}}</p>
+                        <p class="card-text">{{call.date_start}}</p>
+                        {% if call.status == "CLS"%}
+                        <p class="card-text">{{call.date_start}}</p>
+                        {% endif %}
                         <p class="card-text">{{call.problem}}</p>
                         <p class="card-text">{{call.requester}}</p>
                         {% if call.status == "OPN" %}

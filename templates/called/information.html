@@ -3,8 +3,8 @@
 {% block title %}Sucesso{% endblock title %}
 
 {% block content %}
-    <h1>Postagem bem sucedida seu chamado é o {{ id }}<h1>
-    <a href="{% url 'home' %}">Voltar para Home</a>
+    <h1>{{ title_info }}<h1>
+    <a href="{{ redirect }}">{{ text_redirect }}</a>
 {% endblock content %}
 
  

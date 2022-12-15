@@ -47,7 +47,7 @@ nav {
 
 #door {
     padding-right: 20px;
-    color: #9e8f8f;
+    color: #565656;
 }
 
 .create {
@@ -61,6 +61,15 @@ nav {
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    color: #565656;
+    font-size: 20px;
+    padding: 0;
+}
+
+#pages a {
+    color: #565656;
+    font-size: 15px;
+    text-decoration: none;
 }
 
 footer {

@@ -26,11 +26,11 @@
 <main>
     <div id="pages">
         {% if page_befor != 0 %}
-        <a  href="{% url 'list' 'abertos'  page_befor %}">Anterior</a>
+        <a  href="{% url 'list' status  page_befor %}">Anterior</a>
         {% endif %}
         <p>{{ page }}</p>
         {% if page_next != 0 %}
-        <a  href="{% url 'list' 'abertos'  page_next %}">Proxima</a>
+        <a  href="{% url 'list' status  page_next %}">Proxima</a>
         {% endif %}
     </div>
     <section class="container">

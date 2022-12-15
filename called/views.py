@@ -59,6 +59,7 @@ def list(request, stts, page):
                 'page': page,
                 'page_befor': page_befor,
                 'page_next': page_next,
+                'status': stts,
             }
         )
 
@@ -70,7 +71,11 @@ def edit_status(request, id, status):
     if (called.status == Call.STATUS_CALLED[2][0]):
         return render(request,'called/information.html',
             {'title_info': 'Esse chamado já está encerado'})
-    
+        
+    for row in Call.STATUS_CALLED:
+        if row[1] == status:
+            status = row[0]
+            
     called.status = status
     
     called.save()

@@ -42,11 +42,23 @@ def list(request, stts, page):
         if row[1] == stts:
             stts = row[0]
     
+    total = Call.objects.filter(status=stts).count()
+    
+    number_page = total/8
+    if total % 8 != 0:
+        number_page+=1
+        
+    page_befor = page-1 if page-1 >= 0 else 0
+    page_next = page+1 if page+1 < number_page else 0
+    
     called = Call.objects.filter(status=stts)[(page-1)*8:page*8]
+    
     return render(request, 'called/list.html', 
             {
                 'list_called' : called,
                 'page': page,
+                'page_befor': page_befor,
+                'page_next': page_next,
             }
         )
 

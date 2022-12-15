@@ -25,9 +25,13 @@
     
 <main>
     <div id="pages">
-        <a  href="{% url 'list' 'abertos' 2 %}">Anterior</a>
+        {% if page_befor != 0 %}
+        <a  href="{% url 'list' 'abertos'  page_befor %}">Anterior</a>
+        {% endif %}
         <p>{{ page }}</p>
-        <a  href="{% url 'list' 'abertos' 1 %}">Proxima</a>
+        {% if page_next != 0 %}
+        <a  href="{% url 'list' 'abertos'  page_next %}">Proxima</a>
+        {% endif %}
     </div>
     <section class="container">
         {% if list_called %}

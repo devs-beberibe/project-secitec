@@ -1,6 +1,3 @@
-from tarfile import PAX_FIELDS
-from telnetlib import STATUS
-from unicodedata import name
 from django.db import models
 
 # Create your models here.

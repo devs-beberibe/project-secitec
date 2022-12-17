@@ -77,9 +77,9 @@ def edit_status(request, id, status):
             status = row[0]
             
     called.status = status
-    
     called.save()
-    return list(request, 'OPN', 1)
+
+    return list(request, status, 1)
 
 
 def query(request):

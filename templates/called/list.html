@@ -28,7 +28,7 @@
         {% if page_befor != 0 %}
         <a  href="{% url 'list' status  page_befor %}">Anterior</a>
         {% endif %}
-        <p>{{ page }}</p>
+        <p class="align-bootom">{{ page }}</p>
         {% if page_next != 0 %}
         <a  href="{% url 'list' status  page_next %}">Proxima</a>
         {% endif %}
@@ -40,24 +40,26 @@
             <div class="col-sm-6 col-md-4 col-lg-3 ">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-subtitle">{{call.secretary_sector}}</h5>
-                        <h4 class="card-title">Número do chamado: {{call.id}}</h4>
+                        <div class="d-flex flex-row justify-content-between align-items-center">
+                          <h5 class="card-title">{{call.secretary_sector}}</h5>
+                          {% if call.status == "OPN" %}
+                            <div class="status status-open"></div>
+                          {% elif call.status == "IMP" %}
+                              <div class="status status-in-processor"></div>
+                          {% else %}
+                              <div class="status status-close"></div>
+                          {% endif %}
+                        </div>
+                        <h6 class="card-subtitle text-muted">Número do chamado: {{call.id}}</h6>
                         <p class="card-text">{{call.date_start}}</p>
                         {% if call.status == "CLS"%}
-                        <p class="card-text">{{call.date_start}}</p>
+                        <p class="card-text">{{call.date_end}}</p>
                         {% endif %}
-                        <p class="card-text">{{call.problem}}</p>
                         <p class="card-text">{{call.requester}}</p>
-                        {% if call.status == "OPN" %}
-                            <div class="status status-open"></div>
-                        {% elif call.status == "IMP" %}
-                            <div class="status status-in-processor"></div>
-                        {% else %}
-                            <div class="status status-close"></div>
-                        {% endif %}
+                        <p class="card-text">{{call.problem}}</p>
                         {% if call.status != 'CLS' %}
                         {% if call.status != 'IMP' %}
-                        <a href="{% url 'edit' call.id 'emAndamento' %}" class="btn btn-primary col-auto">Executando</a>
+                        <a href="{% url 'edit' call.id 'emAndamento' %}" class="btn btn-primary col-auto">Executar</a>
                         {% endif %}
                         <a href="{% url 'edit' call.id 'encerrados' %}" class="btn btn-primary col-auto">Encerrar</a>
                         {% endif %}

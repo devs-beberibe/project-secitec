@@ -1,5 +1,7 @@
 body {
     background: url(../img/image.svg) no-repeat top left;
+    height: 100%;
+    margin: 0;
 }
 
 .jumbotron {
@@ -12,8 +14,13 @@ body {
 .status {
     height: 25px;
     width: 25px;
-    margin: 10px;
+    margin: 5px;
     border-radius: 50%;
+}
+
+main {
+    min-height: 100%;
+    margin-bottom: 2em;
 }
 
 .status-open {
@@ -72,9 +79,13 @@ nav {
     text-decoration: none;
 }
 
+.push {
+    height: 50px;
+}
+
 footer {
     position: relative;
-    height: 1em;
+    height: 50px;
     background-color: green;
     border-bottom: 0;
     bottom: 0;

@@ -36,6 +36,9 @@ def create(request):
             )
     return HttpResponse("Método não permitido", status=403)
 
+def close(request, id):
+    return render(request, 'called/close.html')    
+    
 @login_required
 def list(request, stts, page):
     for row in Call.STATUS_CALLED:

@@ -59,9 +59,9 @@
                         <p class="card-text">{{call.problem}}</p>
                         {% if call.status != 'CLS' %}
                         {% if call.status != 'IMP' %}
-                        <a href="{% url 'edit' call.id 'emAndamento' %}" class="btn btn-primary col-auto">Executar</a>
+                        <a href="{% url 'edit' call.id 'encerrados' %}" class="btn btn-primary col-auto">Executar</a>
                         {% endif %}
-                        <a href="{% url 'edit' call.id 'encerrados' %}" class="btn btn-primary col-auto">Encerrar</a>
+                        <a href="{% url 'close' call.id %}" class="btn btn-primary col-auto">Encerrar</a>
                         {% endif %}
                     </div>
                 </div>

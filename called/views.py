@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 
-from .models import Secretary, Call
+from .models import Secretary, Call, Tecnico
 
 def index(request):
     return render(request, 'called/index.html')
@@ -36,8 +36,32 @@ def create(request):
             )
     return HttpResponse("Método não permitido", status=403)
 
-def close(request, id):
-    return render(request, 'called/close.html')    
+def close(request, id_call):
+    call = Call.objects.filter(id=id_call)
+    tecnicos  = Tecnico.objects.all() 
+    
+    if request.method == 'POST':    
+        for aux in tecnicos:
+            if request.POST.get(aux.user.username, False):
+                tecnico = Tecnico.objects.filter(
+                    user_id = request.POST.get(aux.user.username, False)
+                )[0]
+                tecnico.called.add(call[0].id)
+                tecnico.save()
+                   
+        return edit_status(request, id_call, 'encerrados')
+    
+    else:
+        context = {
+            'call' : call,
+            'tecnicos': tecnicos,
+        }
+        
+        return render(request, 'called/close.html', {
+            'call' : call,
+            'tecnicos': tecnicos,
+        })
+    
     
 @login_required
 def list(request, stts, page):
@@ -55,7 +79,7 @@ def list(request, stts, page):
     page_next = page+1 if page+1 < number_page else 0
     
     called = Call.objects.filter(status=stts)[(page-1)*8:page*8]
-    
+    print(called)
     return render(request, 'called/list.html', 
             {
                 'list_called' : called,

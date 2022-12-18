@@ -23,7 +23,8 @@ class Call(models.Model):
     requester = models.CharField(max_length=100)
     status = models.CharField(max_length=3, choices=STATUS_CALLED, default='OPN')
     date_start = models.DateField(default=timezone.now)
-    date_end = models.DateField(default=None, blank=True, null=True)  
+    date_end = models.DateField(default=None, blank=True, null=True)
+    solution = models.TextField(max_length=250, null=True, blank=True)
     
     def __str__(self):
         return Secretary.objects.get(pk=self.secretary_sector.id).name

@@ -50,7 +50,14 @@ def close(request, id_call):
                 tecnico.called.add(call.id)
                 tecnico.save()
         
-        call.date_end = timezone.now()
+        if request.POST.get('date_end', False):
+            data_end = request.POST['date_end']
+        else:    
+            data_end = timezone.now()
+        
+        if request.POST.get('solution', False):
+            call.solution = request.POST.get('solution', False)
+        call.date_end = data_end
         call.save(force_update=True)
                    
         return edit_status(request, id_call, 'encerrados')

@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from django.utils import timezone
 from django.shortcuts import render, get_object_or_404
 
 from .models import Secretary, Call, Tecnico
@@ -37,8 +38,8 @@ def create(request):
     return HttpResponse("Método não permitido", status=403)
 
 def close(request, id_call):
-    call = Call.objects.filter(id=id_call)
-    tecnicos  = Tecnico.objects.all() 
+    call = get_object_or_404(Call, pk=id_call)
+    tecnicos  = Tecnico.objects.all()    
     
     if request.method == 'POST':    
         for aux in tecnicos:
@@ -46,8 +47,11 @@ def close(request, id_call):
                 tecnico = Tecnico.objects.filter(
                     user_id = request.POST.get(aux.user.username, False)
                 )[0]
-                tecnico.called.add(call[0].id)
+                tecnico.called.add(call.id)
                 tecnico.save()
+        
+        call.date_end = timezone.now()
+        call.save(force_update=True)
                    
         return edit_status(request, id_call, 'encerrados')
     
@@ -79,7 +83,7 @@ def list(request, stts, page):
     page_next = page+1 if page+1 < number_page else 0
     
     called = Call.objects.filter(status=stts)[(page-1)*8:page*8]
-    print(called)
+    
     return render(request, 'called/list.html', 
             {
                 'list_called' : called,

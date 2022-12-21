@@ -94,3 +94,11 @@ footer {
 .card-text {
     overflow: hidden;
 }
+
+.card {
+    margin: 5px;
+}
+
+.shadow-select:hover {
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.2);
+}

@@ -35,6 +35,11 @@ def create(request):
                     'text_redirect' : "Voltar para Home"
                 }
             )
+    else :
+        list_secretary = Secretary.objects.all()
+        context = { 'list_secretary' : list_secretary}
+        return render(request, 'called/create.html', context)
+
     return HttpResponse("Método não permitido", status=403)
 
 def close(request, id_call):

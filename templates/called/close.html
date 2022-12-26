@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block nav_pages %}
+<div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'list' 'abertos' 1 %}">Abertos</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'list' 'emAndamento' 1 %}">Em andamento</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'list' 'encerrados' 1%}">Encerados</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/accounts/logout">Sair</a>
+      </li>
+    </ul>
+  </div>
+{% endblock nav_pages %}
+
+
+{% block content%}
+
+<section class="box container col-sm-12 col-lg-6">
+  <div class="card">
+    <div class="card-body">
+        <div class="d-flex flex-row justify-content-between align-items-center">
+          <h5 class="card-title">{{call.secretary_sector}}</h5>
+          {% if call.status == "OPN" %}
+            <div class="status status-open"></div>
+          {% elif call.status == "IMP" %}
+              <div class="status status-in-processor"></div>
+          {% else %}
+              <div class="status status-close"></div>
+          {% endif %}
+        </div>
+        <h6 class="card-subtitle text-muted">Número do chamado: {{call.id}}</h6>
+        <p class="card-text">{{call.date_start}}</p>
+        {% if call.status == "CLS"%}
+        <p class="card-text">{{call.date_end}}</p>
+        {% endif %}
+        <p class="card-text">{{call.requester}}</p>
+        <p class="card-text">{{call.problem}}</p>
+        
+        <h6>Tecnicos (Marque os tecnicos que realizaram o chamado)</h6>
+
+        <form href="." method="POST">
+          {% csrf_token %}
+          {% for tecnico in tecnicos %}
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="{{tecnico.user.id}}" id="{{tecnico.user.username}}" name="{{tecnico.user.username}}">
+            <label class="form-check-label" for="{{tecnico.user.username}}">
+              {{tecnico.user.username}}
+            </label>
+          </div>
+          {% endfor %}
+          <h6>Data de encerramento do chamado</h6>
+          <p>Se não for colocado a data, o chamado será encerrado com a data do momento</p>
+          <input type="date" name="date_end">
+          <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">
+              Oque vocẽs fez?
+            </label>
+            <textarea name="solution" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+          </div>
+          <input type="submit" value="Encerar">
+        </form>
+    </div>
+  </div>
+</section>
+{% endblock content%}

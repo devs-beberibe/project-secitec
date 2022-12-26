@@ -4,15 +4,31 @@
 
 {% block content %}
   {% if call %}
-    <div class="container col-sm-6 col-md-4 col-lg-3">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">{{ call.secretary_sector }}</h5>
-          <p class="card-text">{{ call.problem }}</p>
-          <p class="card-text">{{ call.status }}</p>
+
+<section class="box container col-sm-12 col-lg-6">
+  <div class="card">
+    <div class="card-body">
+        <div class="d-flex flex-row justify-content-between align-items-center">
+          <h5 class="card-title">{{call.secretary_sector}}</h5>
+          {% if call.status == "OPN" %}
+            <div class="status status-open"></div>
+          {% elif call.status == "IMP" %}
+              <div class="status status-in-processor"></div>
+          {% else %}
+              <div class="status status-close"></div>
+          {% endif %}
         </div>
+        <h6 class="card-subtitle text-muted">Número do chamado: {{call.id}}</h6>
+        <p class="card-text">{{call.date_start}}</p>
+        {% if call.date_end %}
+        {% if call.status == "CLS"%}
+        <p class="card-text">{{call.date_end}}</p>
+        {% endif %}
+        <p class="card-text">{{call.requester}}</p>
+        <p class="card-text">{{call.problem}}</p>    
       </div>
-    </div>
+  </div>
+</section>
   {% else %}
     <h1 class="content box text-center">
       Esse chamado não existe!

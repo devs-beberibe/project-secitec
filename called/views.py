@@ -38,6 +38,7 @@ def create(request):
         
     return HttpResponse("Método não permitido", status=403)
 
+@login_required
 def close(request, id_call):
     call = get_object_or_404(Call, pk=id_call)
     tecnicos  = Tecnico.objects.all()    
@@ -102,6 +103,7 @@ def list(request, stts, page):
             }
         )
 
+@login_required
 def edit_status(request, id, status):
     called = get_object_or_404(Call, pk=id)
     

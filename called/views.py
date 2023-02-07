@@ -8,11 +8,6 @@ from .models import Secretary, Call, Tecnico
 def index(request):
     return render(request, 'called/index.html')
 
-def create_page(request):
-    list_secretary = Secretary.objects.all()
-    context = { 'list_secretary' : list_secretary}
-    return render(request, 'called/create.html', context)
-
 def detail(request):
     call_id = request.GET['call_id']
     call = Call.objects.filter(pk=call_id).get
@@ -35,6 +30,12 @@ def create(request):
                     'text_redirect' : "Voltar para Home"
                 }
             )
+    
+    else:
+        list_secretary = Secretary.objects.all()
+        context = { 'list_secretary' : list_secretary}
+        return render(request, 'called/create.html', context)
+        
     return HttpResponse("Método não permitido", status=403)
 
 def close(request, id_call):

@@ -31,7 +31,7 @@ def create(request):
                 }
             )
     
-    else:
+    elif request.method == "GET":
         list_secretary = Secretary.objects.all()
         context = { 'list_secretary' : list_secretary}
         return render(request, 'called/create.html', context)

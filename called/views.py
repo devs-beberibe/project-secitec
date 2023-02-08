@@ -97,7 +97,6 @@ def list(request):
     return render(request, 'called/list.html', 
             {
                 'called' : called,
-                'page': page,
                 'status': stts,
             }
         )
@@ -118,9 +117,7 @@ def edit_status(request, id, status):
             
     called.status = status
     called.save()
-
-    print('>>', request.GET.get('status'), request.GET.get('page'))
-
+    
     return index(request)
 
 

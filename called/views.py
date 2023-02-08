@@ -80,16 +80,17 @@ def close(request, id_call):
     
     
 @login_required
-def list(request, stts, page):
+def list(request):
+
+    stts = request.GET.get('status')
+    page = request.GET.get('page')
+
     for row in Call.STATUS_CALLED:
         if row[1] == stts:
             stts = row[0]
     
     called_all = Call.objects.filter(status=stts)
     paginator = Paginator(called_all, 8)
-        
-    page_befor = 1
-    page_next = 1
     
     called = paginator.get_page(page)
     

@@ -6,13 +6,13 @@
 <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'list' 'abertos' 1 %}">Abertos</a>
+        <a class="nav-link" href="{% url 'list' %} ?status=abertos&page=1">Abertos</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'list' 'emAndamento' 1 %}">Em andamento</a>
+        <a class="nav-link" href="{% url 'list' %} ?status=emAndament&page=1">Em andamento</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'list' 'encerrados' 1%}">Encerados</a>
+        <a class="nav-link" href="{% url 'list' %} ?status=encerrado&page=1 ">Encerados</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/accounts/logout">Sair</a>
@@ -26,13 +26,13 @@
 <main>
     <div id="pages">
         {% if called.has_previous %}
-        <a  href="{% url 'list' status called.previous_page_number %}">Anterior</a>
+        <a  href="{% url 'list' %}?status={{ status }}&page={{ called.previous_page_number }}">Anterior</a>
         {% endif %}
         
         <p class="align-bootom">{{ called.number }} de {{ called.paginator.num_pages }}</p>
 
         {% if called.has_next %}
-        <a  href="{% url 'list' status called.next_page_number %}">Proxima</a>
+        <a  href="{% url 'list' %}?status={{ status }}&page={{ called.next_page_number }}">Proxima</a>
         {% endif %}
     </div>
 

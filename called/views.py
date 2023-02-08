@@ -119,7 +119,7 @@ def edit_status(request, id, status):
     called.status = status
     called.save()
 
-    return list(request, status, 1)
+    return list(request)
 
 
 def query(request):

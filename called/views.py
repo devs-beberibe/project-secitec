@@ -8,7 +8,7 @@ from django.core.paginator import Paginator
 from .models import Secretary, Call, Tecnico
 
 def index(request):
-    return render(request, 'called/index.html')
+    return render(request, 'core/index.html')
 
 def detail(request):
     call_id = request.GET['call_id']
@@ -119,7 +119,9 @@ def edit_status(request, id, status):
     called.status = status
     called.save()
 
-    return list(request)
+    print('>>', request.GET.get('status'), request.GET.get('page'))
+
+    return index(request)
 
 
 def query(request):

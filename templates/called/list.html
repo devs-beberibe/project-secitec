@@ -9,10 +9,10 @@
         <a class="nav-link" href="{% url 'list' %}?status=abertos&page=1">Abertos</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'list' %}?status=emAndament&page=1">Em andamento</a>
+        <a class="nav-link" href="{% url 'list' %}?status=emAndamento&page=1">Em andamento</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'list' %}?status=encerrado&page=1 ">Encerados</a>
+        <a class="nav-link" href="{% url 'list' %}?status=encerrados&page=1 ">Encerados</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/accounts/logout">Sair</a>
@@ -62,7 +62,7 @@
                         <p class="card-text">{{call.problem}}</p>
                         {% if call.status != 'CLS' %}
                         {% if call.status != 'IMP' %}
-                        <a href="{% url 'edit' call.id 'encerrados' %}" class="btn btn-primary col-auto">Executar</a>
+                        <a href="{% url 'edit' call.id 'emAndamento' %}" class="btn btn-primary col-auto">Executar</a>
                         {% endif %}
                         <a href="{% url 'close' call.id %}" class="btn btn-primary col-auto">Encerrar</a>
                         {% endif %}

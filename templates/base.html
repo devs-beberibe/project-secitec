@@ -20,8 +20,30 @@
       <a class="navbar-brand" href="{% url 'home' %}">
         <img id="logo" src="/static/img/logo.svg" alt="SECITEC">
       </a>
-      {% block nav_pages %}{% endblock nav_pages %}
       
+      <!--{% block nav_pages %}{% endblock nav_pages %}-->
+      {% if request.user.is_authenticated %}
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'list' %}?status=abertos&page=1">Abertos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'list' %}?status=emAndamento&page=1">Em andamento</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'list' %}?status=encerrados&page=1">Encerados</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'create' %}">Criar Chamado</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/accounts/logout">Sair</a>
+          </li>
+        </ul>
+      </div>
+      {% endif %}
+
       <a id="door" href=" {% url 'list' %}?status=abertos&page=1 ">
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-door-open-fill" viewBox="0
                     0 16 16">

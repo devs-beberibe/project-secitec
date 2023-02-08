@@ -25,18 +25,21 @@
     
 <main>
     <div id="pages">
-        {% if page_befor != 0 %}
-        <a  href="{% url 'list' status  page_befor %}">Anterior</a>
+        {% if called.has_previous %}
+        <a  href="{% url 'list' status called.previous_page_number %}">Anterior</a>
         {% endif %}
-        <p class="align-bootom">{{ page }}</p>
-        {% if page_next != 0 %}
-        <a  href="{% url 'list' status  page_next %}">Proxima</a>
+        
+        <p class="align-bootom">{{ called.number }} de {{ called.paginator.num_pages }}</p>
+
+        {% if called.has_next %}
+        <a  href="{% url 'list' status called.next_page_number %}">Proxima</a>
         {% endif %}
     </div>
+
     <section class="container">
-        {% if list_called %}
+        {% if called %}
         <div class="row">
-        {% for call in list_called %}
+        {% for call in called %}
             <div class="col-sm-6 col-md-4 col-lg-3">
                 <div class="card shadow-select">
                     <div class="card-body">

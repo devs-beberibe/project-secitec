@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from django.utils import timezone
 from django.shortcuts import render, get_object_or_404
 
+from django.core.paginator import Paginator
+
 from .models import Secretary, Call, Tecnico
 
 def index(request):
@@ -83,23 +85,18 @@ def list(request, stts, page):
         if row[1] == stts:
             stts = row[0]
     
-    total = Call.objects.filter(status=stts).count()
-    
-    number_page = total/8
-    if total % 8 != 0:
-        number_page+=1
+    called_all = Call.objects.filter(status=stts)
+    paginator = Paginator(called_all, 8)
         
-    page_befor = page-1 if page-1 >= 0 else 0
-    page_next = page+1 if page+1 < number_page else 0
+    page_befor = 1
+    page_next = 1
     
-    called = Call.objects.filter(status=stts)[(page-1)*8:page*8]
+    called = paginator.get_page(page)
     
     return render(request, 'called/list.html', 
             {
-                'list_called' : called,
+                'called' : called,
                 'page': page,
-                'page_befor': page_befor,
-                'page_next': page_next,
                 'status': stts,
             }
         )

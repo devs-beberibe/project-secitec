@@ -3,15 +3,12 @@ from django.http import HttpResponse
 from django.utils import timezone
 from django.shortcuts import render, get_object_or_404
 
+from django.core.paginator import Paginator
+
 from .models import Secretary, Call, Tecnico
 
 def index(request):
-    return render(request, 'called/index.html')
-
-def create_page(request):
-    list_secretary = Secretary.objects.all()
-    context = { 'list_secretary' : list_secretary}
-    return render(request, 'called/create.html', context)
+    return render(request, 'core/index.html')
 
 def detail(request):
     call_id = request.GET['call_id']
@@ -35,8 +32,16 @@ def create(request):
                     'text_redirect' : "Voltar para Home"
                 }
             )
+
+    elif request.method == "GET" :
+        list_secretary = Secretary.objects.all()
+        context = { 'list_secretary' : list_secretary}
+        return render(request, 'called/create.html', context)
+
+
     return HttpResponse("Método não permitido", status=403)
 
+@login_required
 def close(request, id_call):
     call = get_object_or_404(Call, pk=id_call)
     tecnicos  = Tecnico.objects.all()    
@@ -75,32 +80,28 @@ def close(request, id_call):
     
     
 @login_required
-def list(request, stts, page):
+def list(request):
+
+    stts = request.GET.get('status')
+    page = request.GET.get('page')
+
     for row in Call.STATUS_CALLED:
         if row[1] == stts:
             stts = row[0]
     
-    total = Call.objects.filter(status=stts).count()
+    called_all = Call.objects.filter(status=stts)
+    paginator = Paginator(called_all, 8)
     
-    number_page = total/8
-    if total % 8 != 0:
-        number_page+=1
-        
-    page_befor = page-1 if page-1 >= 0 else 0
-    page_next = page+1 if page+1 < number_page else 0
-    
-    called = Call.objects.filter(status=stts)[(page-1)*8:page*8]
+    called = paginator.get_page(page)
     
     return render(request, 'called/list.html', 
             {
-                'list_called' : called,
-                'page': page,
-                'page_befor': page_befor,
-                'page_next': page_next,
+                'called' : called,
                 'status': stts,
             }
         )
 
+@login_required
 def edit_status(request, id, status):
     called = get_object_or_404(Call, pk=id)
     
@@ -116,8 +117,8 @@ def edit_status(request, id, status):
             
     called.status = status
     called.save()
-
-    return list(request, status, 1)
+    
+    return index(request)
 
 
 def query(request):

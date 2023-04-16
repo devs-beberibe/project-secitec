@@ -3,8 +3,7 @@
 {% block title %}Listagem{% endblock title %}
 
 {% block content %}
-    
-<main>
+<section class="container">
     <div id="pages">
         {% if called.has_previous %}
         <a  href="{% url 'list' %}?status={{ status }}&page={{ called.previous_page_number }}">Anterior</a>
@@ -16,6 +15,48 @@
         <a  href="{% url 'list' %}?status={{ status }}&page={{ called.next_page_number }}">Proxima</a>
         {% endif %}
     </div>
+    {% if list_called %}
+    <div class="row">
+    {% for call in list_called %}
+        <div class="col-sm-6 col-md-4 col-lg-3 ">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-subtitle">{{call.secretary_sector}}</h5>
+                    <h4 class="card-title">Número do chamado: {{call.id}}</h4>
+                    <p class="card-text">{{call.problem}}</p>
+                    <p class="card-text">{{call.requester}}</p>
+                    {% if call.status == "OPN" %}
+                        <div class="status status-open"></div>
+                    {% elif call.status == "IMP" %}
+                        <div class="status status-in-processor"></div>
+                    {% else %}
+                        <div class="status status-close"></div>
+                    {% endif %}
+                    {% if call.status != 'CLS' %}
+                    <form action="{% url 'edit' call.id %}" method="post" class="row g-3">
+                        {% csrf_token %}
+                        <div  class="col-auto">
+                            <select name="status" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                <option select>Status</option>
+                                {% if call.status != 'IMP' %}
+                                    <option value="IMP">Em andamento</option>
+                                {% endif %}
+                                <option value="CLS">Encerado</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary col-auto">Altera</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <h1>Sem chamados</h1>
+    {% endif %} 
+</section>
+
 
     <section class="container">
         {% if called %}

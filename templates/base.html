@@ -5,40 +5,109 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js" integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous" />
-    <link href=" {% static 'css/style.css' %}" rel="stylesheet"/>
-    <!--
-    -->
-    <title>SECITEC</title>
+    <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/TopoTimbre.ico' %}">
+    
+    <title>{% block title %}{% endblock title %}</title>
   </head>
 
   <body>
-    <!-- url("img/image.svg") no-repeat center center-->
-    <nav class="navbar navbar-expand-lg d-flex justify-content-between">
-      <a class="navbar-brand" href="{% url 'home' %}">
-        <img id="logo" src="/static/img/logo.svg" alt="SECITEC">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom color-green shadow">
+      <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+        <img id="logo" src="{% static '/img/logo.svg' %}" alt="SASC">
       </a>
-      {% block nav_pages %}{% endblock nav_pages %}
+
+      {% if user.is_authenticated %}
+      <ul class="nav nav-pills">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'list' 'abertos' 1 %}">Abertos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'list' 'emAndamento' 1 %}">Em andamento</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'list' 'encerrados' 1%}">Encerados</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/accounts/logout">Sair</a>
+        </li>
+      </ul>
       
-      <a id="door" href=" {% url 'list' 'abertos' '1' %} ">
-        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-door-open-fill" viewBox="0
-                    0 16 16">
-          <path d="M1.5 15a.5.5 0 0 0 0 1h13a.5.5 0 0 0 0-1H13V2.5A1.5
-                        1.5 0 0 0 11.5 1H11V.5a.5.5 0 0 0-.57-.495l-7 1A.5.5 0 0
-                        0 3 1.5V15H1.5zM11 2h.5a.5.5 0 0 1 .5.5V15h-1V2zm-2.5
-                        8c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5
-                        1z" />
-        </svg>
-      </a>
-    </nav>
-    {% block content %}{% endblock %}
-    <footer class="page-footer font-small blue pt-4">
-      <div class="footer-copyright text-center py-3">
-        © 2020 Copyrigh
+      <div id="id-user-profile" class="color-yellow rounded-2 px-2 me-3">
+        <a id="login-logout" class="d-flex align-items-center mt-2" href="{% url 'logout' %}">
+          <p class="login_p mb-0 me-2">{{ user.username }}</p>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 512 512">
+          <!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M217.9 105.9L340.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L217.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1L32 320c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM352 416l64 0c17.7 0 32-14.3 32-32l0-256c0-17.7-14.3-32-32-32l-64 0c-17.7 0-32-14.3-32-32s14.3-32 32-32l64 0c53 0 96 43 96 96l0 256c0 53-43 96-96 96l-64 0c-17.7 0-32-14.3-32-32s14.3-32 32-32z"/></svg>
+        </a>
+      </div>
+      {% else %}
+      <div id="id-user-profile" class="color-yellow rounded-2 px-2 me-3">
+        <a id="login-logout" class="d-flex align-items-center" href="{% url 'login' %}">
+          <p class="mb-0">login</p>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 448 512">
+          <!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/></svg>
+        </a>
+      </div>
+      <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-door-open-fill" viewBox="0
+            0 16 16">
+        <path d="M1.5 15a.5.5 0 0 0 0 1h13a.5.5 0 0 0 0-1H13V2.5A1.5
+                      1.5 0 0 0 11.5 1H11V.5a.5.5 0 0 0-.57-.495l-7 1A.5.5 0 0
+                      0 3 1.5V15H1.5zM11 2h.5a.5.5 0 0 1 .5.5V15h-1V2zm-2.5
+                      8c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5
+                      1z" />
+      </svg>
+      {% endif %}
+    </header>
+    
+    <main class="container">
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer id="id-footer" class="row row-cols-1 row-cols-sm-2 row-cols-md-5 p-1 py-5 border-top">
+      <div class="col mb-3 p-4">
+        <a href="." class="d-flex align-items-center mb-3 link-dark text-decoration-none">
+          <img id="logo-footer" src="{% static '/img/beberibe_logo.svg' %}" alt="Prefeirura Municipal de Beberibe">
+        </a>
+        <p class="text-light">© 2023</p>
+      </div>
+
+      <!--<div class="col-2 mb-3"></div>-->
+
+      <div class="col mb-3">
+        <h5>SISVS</h5>
+        <p class="flex-column text-footer">
+          O SISVS é uma ferramenta de coleta de informação em âmbito municipal, gerenciado pela Vigilância 
+          Socioassistencial de Beberibe. Por meio dele alimentaremos dois sistemas, o SISVD – Sistema de 
+          Informação de Situação de Violência e/ou Violação de Direitos, e o SIFAC – Sistema de Informação 
+          de Famílias Atendidas nos CRAS.
+        </p>
+      </div>
+
+      <div class="col mb-3">
+        <h5>SISVD</h5>
+        <p class="flex-column text-footer">
+          O SISVD é um sistema alimentado por todos os setores vinculados à Rede de Atendimento, 
+          Proteção e Defesa de pessoas em situação de violência e/ou violação de direitos, 
+          objetivando coletar dados que contribuam com a atuação do Sistema de Garantia de Direitos.
+        </p>
+      </div>
+
+      <div class="col mb-3">
+        <h5>SIFAC</h5>
+        <p class="flex-column text-footer">
+          O SIFAC é um sistema de informações de famílias que foram atendidas pelos 
+          CRAS, contendo dados acerca da população de Beberibe que acessa o equipamento, 
+          contribuindo para um diagnóstico socioterritorial mais completo e que auxilie no
+           planejamento das ações de Proteção Social.
+        </p>
       </div>
     </footer>
-    <script src="" async defer></script>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js" integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous"></script>
+    <script src="{% static 'js/script.js' %}"></script>
   </body>
 </html>
+

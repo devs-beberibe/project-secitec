@@ -15,19 +15,22 @@
   <body>
     <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom color-green shadow">
       <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
-        <img id="logo" src="{% static '/img/logo.svg' %}" alt="SASC">
+        <img id="logo" src="{% static '/img/logo.svg' %}" alt="SECITEC">
       </a>
 
       {% if user.is_authenticated %}
       <ul class="nav nav-pills">
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'list' 'abertos' 1 %}">Abertos</a>
+          <a class="nav-link" href="{% url 'list' %}?status=abertos&page=1">Abertos</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'list' 'emAndamento' 1 %}">Em andamento</a>
+          <a class="nav-link" href="{% url 'list' %}?status=emAndamento&page=1">Em andamento</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'list' 'encerrados' 1%}">Encerados</a>
+          <a class="nav-link" href="{% url 'list' %}?status=emAndamento&page=1">Encerados</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'create' %}">Fazer Chamado</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/accounts/logout">Sair</a>
@@ -61,7 +64,7 @@
     </header>
     
     <main class="container">
-      {% block content %}{% endblock %}
+      {% block content %}{% endblock content%}
     </main>
 
     <footer id="id-footer" class="row row-cols-1 row-cols-sm-2 row-cols-md-5 p-1 py-5 border-top">
@@ -75,74 +78,39 @@
       <!--<div class="col-2 mb-3"></div>-->
 
       <div class="col mb-3">
-        <h5>SISVS</h5>
+        <h5>SECITEC</h5>
         <p class="flex-column text-footer">
-          O SISVS é uma ferramenta de coleta de informação em âmbito municipal, gerenciado pela Vigilância 
-          Socioassistencial de Beberibe. Por meio dele alimentaremos dois sistemas, o SISVD – Sistema de 
-          Informação de Situação de Violência e/ou Violação de Direitos, e o SIFAC – Sistema de Informação 
-          de Famílias Atendidas nos CRAS.
+          Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
+          Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
+          when an unknown printer took a galley of type and scrambled it to make a type 
+          specimen book. It has survived not only five centuries, but also the leap into 
+          electronic.
         </p>
       </div>
 
       <div class="col mb-3">
-        <h5>SISVD</h5>
+        <h5>O que fazemos ?</h5>
         <p class="flex-column text-footer">
-          O SISVD é um sistema alimentado por todos os setores vinculados à Rede de Atendimento, 
-          Proteção e Defesa de pessoas em situação de violência e/ou violação de direitos, 
-          objetivando coletar dados que contribuam com a atuação do Sistema de Garantia de Direitos.
+          Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
+          Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
+          when an unknown printer took a galley of type and scrambled it to make a type 
+          specimen book. It has survived not only five centuries, but also the leap into 
+          electronic. 
         </p>
       </div>
 
       <div class="col mb-3">
-        <h5>SIFAC</h5>
+        <h5>Como podemos ajudar</h5>
         <p class="flex-column text-footer">
-          O SIFAC é um sistema de informações de famílias que foram atendidas pelos 
-          CRAS, contendo dados acerca da população de Beberibe que acessa o equipamento, 
-          contribuindo para um diagnóstico socioterritorial mais completo e que auxilie no
-           planejamento das ações de Proteção Social.
+          Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
+          Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
+          when an unknown printer took a galley of type and scrambled it to make a type 
+          specimen book. It has survived not only five centuries, but also the leap into 
+          electronic.
         </p>
-      <!--{% block nav_pages %}{% endblock nav_pages %}-->
-      {% if request.user.is_authenticated %}
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'list' %}?status=abertos&page=1">Abertos</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'list' %}?status=emAndamento&page=1">Em andamento</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'list' %}?status=encerrados&page=1">Encerados</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'create' %}">Criar Chamado</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/accounts/logout">Sair</a>
-          </li>
-        </ul>
-      </div>
-      {% endif %}
-
-      <a id="door" href=" {% url 'list' %}?status=abertos&page=1 ">
-        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-door-open-fill" viewBox="0
-                    0 16 16">
-          <path d="M1.5 15a.5.5 0 0 0 0 1h13a.5.5 0 0 0 0-1H13V2.5A1.5
-                        1.5 0 0 0 11.5 1H11V.5a.5.5 0 0 0-.57-.495l-7 1A.5.5 0 0
-                        0 3 1.5V15H1.5zM11 2h.5a.5.5 0 0 1 .5.5V15h-1V2zm-2.5
-                        8c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5
-                        1z" />
-        </svg>
-      </a>
-    </nav>
-    {% block content %}{% endblock %}
-    <!--<footer class="page-footer font-small blue pt-4">
-      <div class="footer-copyright text-center py-3">
-        © 2022 Copyrigh
-      </div>
+      </div> 
     </footer>
 
-    
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js" integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous"></script>
     <script src="{% static 'js/script.js' %}"></script>

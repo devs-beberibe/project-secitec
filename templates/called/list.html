@@ -3,49 +3,36 @@
 {% block title %}Listagem{% endblock title %}
 
 {% block content %}
-<section class="container">
-    <div id="pages">
-        {% if called.has_previous %}
-        <a  href="{% url 'list' %}?status={{ status }}&page={{ called.previous_page_number }}">Anterior</a>
-        {% endif %}
-        
-        <p class="align-bootom">{{ called.number }} de {{ called.paginator.num_pages }}</p>
 
-        {% if called.has_next %}
-        <a  href="{% url 'list' %}?status={{ status }}&page={{ called.next_page_number }}">Proxima</a>
-        {% endif %}
-    </div>
-    {% if list_called %}
+<section class="container">
+    {% if called %}
     <div class="row">
-    {% for call in list_called %}
-        <div class="col-sm-6 col-md-4 col-lg-3 ">
-            <div class="card">
+    {% for call in called %}
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <div class="card shadow-select">
                 <div class="card-body">
-                    <h5 class="card-subtitle">{{call.secretary_sector}}</h5>
-                    <h4 class="card-title">Número do chamado: {{call.id}}</h4>
-                    <p class="card-text">{{call.problem}}</p>
-                    <p class="card-text">{{call.requester}}</p>
-                    {% if call.status == "OPN" %}
+                    <div class="d-flex flex-row justify-content-between align-items-center">
+                        <h5 class="card-title">{{call.secretary_sector}}</h5>
+                        {% if call.status == "OPN" %}
                         <div class="status status-open"></div>
-                    {% elif call.status == "IMP" %}
-                        <div class="status status-in-processor"></div>
-                    {% else %}
-                        <div class="status status-close"></div>
+                        {% elif call.status == "IMP" %}
+                            <div class="status status-in-processor"></div>
+                        {% else %}
+                            <div class="status status-close"></div>
+                        {% endif %}
+                    </div>
+                    <h6 class="card-subtitle text-muted">Número do chamado: {{call.id}}</h6>
+                    <p class="card-text">{{call.date_start}}</p>
+                    {% if call.status == "CLS"%}
+                    <p class="card-text">{{call.date_end}}</p>
                     {% endif %}
+                    <p class="card-text">{{call.requester}}</p>
+                    <p class="card-text">{{call.problem}}</p>
                     {% if call.status != 'CLS' %}
-                    <form action="{% url 'edit' call.id %}" method="post" class="row g-3">
-                        {% csrf_token %}
-                        <div  class="col-auto">
-                            <select name="status" class="form-select form-select-sm" aria-label=".form-select-sm example">
-                                <option select>Status</option>
-                                {% if call.status != 'IMP' %}
-                                    <option value="IMP">Em andamento</option>
-                                {% endif %}
-                                <option value="CLS">Encerado</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-primary col-auto">Altera</button>
-                    </form>
+                    {% if call.status != 'IMP' %}
+                    <a href="{% url 'edit' call.id 'emAndamento' %}" class="btn btn-primary col-auto">Executar</a>
+                    {% endif %}
+                    <a href="{% url 'close' call.id %}" class="btn btn-primary col-auto">Encerrar</a>
                     {% endif %}
                 </div>
             </div>
@@ -56,47 +43,5 @@
     <h1>Sem chamados</h1>
     {% endif %} 
 </section>
-
-
-    <section class="container">
-        {% if called %}
-        <div class="row">
-        {% for call in called %}
-            <div class="col-sm-6 col-md-4 col-lg-3">
-                <div class="card shadow-select">
-                    <div class="card-body">
-                        <div class="d-flex flex-row justify-content-between align-items-center">
-                          <h5 class="card-title">{{call.secretary_sector}}</h5>
-                          {% if call.status == "OPN" %}
-                            <div class="status status-open"></div>
-                          {% elif call.status == "IMP" %}
-                              <div class="status status-in-processor"></div>
-                          {% else %}
-                              <div class="status status-close"></div>
-                          {% endif %}
-                        </div>
-                        <h6 class="card-subtitle text-muted">Número do chamado: {{call.id}}</h6>
-                        <p class="card-text">{{call.date_start}}</p>
-                        {% if call.status == "CLS"%}
-                        <p class="card-text">{{call.date_end}}</p>
-                        {% endif %}
-                        <p class="card-text">{{call.requester}}</p>
-                        <p class="card-text">{{call.problem}}</p>
-                        {% if call.status != 'CLS' %}
-                        {% if call.status != 'IMP' %}
-                        <a href="{% url 'edit' call.id 'emAndamento' %}" class="btn btn-primary col-auto">Executar</a>
-                        {% endif %}
-                        <a href="{% url 'close' call.id %}" class="btn btn-primary col-auto">Encerrar</a>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-        {% else %}
-        <h1>Sem chamados</h1>
-        {% endif %} 
-    </section>
-</main>
     
 {% endblock content %}

@@ -39,11 +39,6 @@ a {
     border-radius: 50%;
 }
 
-main {
-    min-height: 100%;
-    margin-bottom: 2em;
-}
-
 .status-open {
     background-color: green;
 }
@@ -102,14 +97,6 @@ nav {
 
 .push {
     height: 50px;
-}
-
-footer {
-    position: relative;
-    height: 50px;
-    background-color: green;
-    border-bottom: 0;
-    bottom: 0;
 }
 
 .card-text {

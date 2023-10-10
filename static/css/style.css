@@ -5,7 +5,7 @@
 }
 
 body {
-    background: url(../img/backgraund.svg) no-repeat top left;
+    background: url(../img/backgraund.png) no-repeat top left;
 }
 
 main {
@@ -55,12 +55,8 @@ nav {
     background: #FF9B04;
 }
 
-.box {
+.bg-pesonalite-color {
     background: #e9e9e9;
-    margin-top: 1%;
-    padding: 2%;
-    width: 50%;
-    border-radius: 1em;
 }
 
 #logo {
@@ -73,11 +69,26 @@ nav {
     color: #565656;
 }
 
-.create {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.custom-dropdown .dropdown-toggle {
+    background-color: #DDB000;
+    border-color: #d1a802;
 }
+
+.custom-dropdown .dropdown-toggle:hover {
+    background-color: #d1a802;
+    border-color: #d1a802;
+}
+
+.dateinput,
+.select,
+.textInput,
+.numberinput{
+    border: 1px solid #bdbdbd;
+    padding: .5rem;
+    border-radius: .3rem;
+    margin: .3rem;
+}
+
 
 #pages {
     display: flex;
@@ -119,7 +130,11 @@ nav {
 #login-logout{
     color: #fff;
 }
-    
+
+#logo_secitec{
+    height: 60px;
+}
+
 .dateinput,
 .select,
 .textInput{

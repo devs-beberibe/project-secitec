@@ -19,8 +19,8 @@ class Call(models.Model):
     ]
 
     secretary_sector= models.ForeignKey(Secretary, on_delete=models.CASCADE) 
-    problem = models.TextField(max_length=250)
-    requester = models.CharField(max_length=100)
+    problem = models.TextField('Problema', max_length=250)
+    requester = models.CharField('Requisitante', max_length=100)
     status = models.CharField(max_length=3, choices=STATUS_CALLED, default='OPN')
     date_start = models.DateField(default=timezone.now)
     date_end = models.DateField(default=None, blank=True, null=True)

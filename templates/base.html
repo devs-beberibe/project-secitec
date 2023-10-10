@@ -12,54 +12,60 @@
     <title>{% block title %}{% endblock title %}</title>
   </head>
 
-  <body>
-    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom color-green shadow">
-      <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
-        <img id="logo" src="{% static '/img/logo.svg' %}" alt="SECITEC">
+  <body>    
+    <header class="d-flex flex-wrap justify-content-between mb-2 border-bottom color-green shadow">
+      <a href="/" class="text-decoration-none">
+        <img id="logo" src="{% static '/img/logo.svg' %}" class="mt-2" alt="Logo SECITEC">
       </a>
 
       {% if user.is_authenticated %}
-      <ul class="nav nav-pills">
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'list' %}?status=abertos&page=1">Abertos</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'list' %}?status=emAndamento&page=1">Em andamento</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'list' %}?status=emAndamento&page=1">Encerados</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'create' %}">Fazer Chamado</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/accounts/logout">Sair</a>
-        </li>
-      </ul>
-      
-      <div id="id-user-profile" class="color-yellow rounded-2 px-2 me-3">
-        <a id="login-logout" class="d-flex align-items-center mt-2" href="{% url 'logout' %}">
-          <p class="login_p mb-0 me-2">{{ user.username }}</p>
-          <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 512 512">
-          <!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M217.9 105.9L340.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L217.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1L32 320c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM352 416l64 0c17.7 0 32-14.3 32-32l0-256c0-17.7-14.3-32-32-32l-64 0c-17.7 0-32-14.3-32-32s14.3-32 32-32l64 0c53 0 96 43 96 96l0 256c0 53-43 96-96 96l-64 0c-17.7 0-32-14.3-32-32s14.3-32 32-32z"/></svg>
-        </a>
-      </div>
+      <nav class="navbar navbar-expand-sm navbar-dark color-green" aria-label="Third navbar example">
+        <div class="container-fluid">
+          
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbars-base" aria-controls="navbars-base" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <span></span>
+          <div class="collapse navbar-collapse" id="navbars-base">
+            <ul class="navbar-nav me-auto mb-2 mb-sm-0">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'list' %}?status=abertos&page=1">Abertos</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'list' %}?status=emAndamento&page=1">Encerados</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'create' %}">Fazer Chamado</a>
+              </li>
+              <li class="nav-item">
+              </li>
+            </ul>
+            
+            <div id="id-user-profile" class="dropdown custom-dropdown me-1">
+              <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {{ user.username }}
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'logout' %}">Sair</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </nav>
       {% else %}
-      <div id="id-user-profile" class="color-yellow rounded-2 px-2 me-3">
-        <a id="login-logout" class="d-flex align-items-center" href="{% url 'login' %}">
-          <p class="mb-0">login</p>
+
+      <div id="id-user-profile" class="color-yellow rounded-2 py-1 px-2 my-2 me-3">
+        <a id="login-logout" class="d-flex align-items-center my-1" href="{% url 'login' %}">
+          <p class="mb-0 me-2">login</p>
           <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 448 512">
-          <!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/></svg>
+          <!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - 
+          https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+          <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 
+          383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 
+          383.8 368.2 304 269.7 304H178.3z"/></svg>
         </a>
       </div>
-      <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-door-open-fill" viewBox="0
-            0 16 16">
-        <path d="M1.5 15a.5.5 0 0 0 0 1h13a.5.5 0 0 0 0-1H13V2.5A1.5
-                      1.5 0 0 0 11.5 1H11V.5a.5.5 0 0 0-.57-.495l-7 1A.5.5 0 0
-                      0 3 1.5V15H1.5zM11 2h.5a.5.5 0 0 1 .5.5V15h-1V2zm-2.5
-                      8c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5
-                      1z" />
-      </svg>
+
       {% endif %}
     </header>
     
@@ -67,53 +73,58 @@
       {% block content %}{% endblock content%}
     </main>
 
-    <footer id="id-footer" class="row row-cols-1 row-cols-sm-2 row-cols-md-5 p-1 py-5 border-top">
-      <div class="col mb-3 p-4">
-        <a href="." class="d-flex align-items-center mb-3 link-dark text-decoration-none">
-          <img id="logo-footer" src="{% static '/img/beberibe_logo.svg' %}" alt="Prefeirura Municipal de Beberibe">
-        </a>
-        <p class="text-light">© 2023</p>
+    <footer id="id-footer">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 p-1 py-5 border-top mb-2">
+        <div class="col mb-3 p-4">
+          <a href="." class="d-flex align-items-center mb-3 link-dark text-decoration-none">
+            <img id="logo-footer" src="{% static '/img/beberibe_logo.svg' %}" alt="Prefeirura Municipal de Beberibe">
+          </a>
+          <p class="text-light">© 2023</p>
+        </div>
+
+        <div class="col mb-3">
+          <h5>SECITEC</h5>
+          <p class="flex-column text-footer">
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
+            Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
+            when an unknown printer took a galley of type and scrambled it to make a type 
+            specimen book. It has survived not only five centuries, but also the leap into 
+            electronic.
+          </p>
+        </div>
+
+        <div class="col mb-3">
+          <h5>O que fazemos ?</h5>
+          <p class="flex-column text-footer">
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
+            Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
+            when an unknown printer took a galley of type and scrambled it to make a type 
+            specimen book. It has survived not only five centuries, but also the leap into 
+            electronic. 
+          </p>
+        </div>
+
+        <div class="col mb-3">
+          <h5>Como podemos ajudar</h5>
+          <p class="flex-column text-footer">
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
+            Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
+            when an unknown printer took a galley of type and scrambled it to make a type 
+            specimen book. It has survived not only five centuries, but also the leap into 
+            electronic.
+          </p>
+        </div>
       </div>
 
-      <!--<div class="col-2 mb-3"></div>-->
-
-      <div class="col mb-3">
-        <h5>SECITEC</h5>
-        <p class="flex-column text-footer">
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-          Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
-          when an unknown printer took a galley of type and scrambled it to make a type 
-          specimen book. It has survived not only five centuries, but also the leap into 
-          electronic.
-        </p>
+      <div id="div_logo_secitec" class="py-2 container">
+        <img id="logo_secitec" class="border-top pt-2 container" src="{% static '/img/logo_secitec.svg' %}" alt="Logo SECITEC">
       </div>
-
-      <div class="col mb-3">
-        <h5>O que fazemos ?</h5>
-        <p class="flex-column text-footer">
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-          Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
-          when an unknown printer took a galley of type and scrambled it to make a type 
-          specimen book. It has survived not only five centuries, but also the leap into 
-          electronic. 
-        </p>
-      </div>
-
-      <div class="col mb-3">
-        <h5>Como podemos ajudar</h5>
-        <p class="flex-column text-footer">
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-          Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
-          when an unknown printer took a galley of type and scrambled it to make a type 
-          specimen book. It has survived not only five centuries, but also the leap into 
-          electronic.
-        </p>
-      </div> 
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js" integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous"></script>
     <script src="{% static 'js/script.js' %}"></script>
+  
   </body>
 </html>
 

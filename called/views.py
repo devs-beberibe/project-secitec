@@ -2,10 +2,11 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.utils import timezone
 from django.shortcuts import render, get_object_or_404
-
+from django.contrib import messages
 from django.core.paginator import Paginator
 
 from .models import Secretary, Call, Tecnico
+from .forms import CallForm
 
 def index(request):
     return render(request, 'core/index.html')
@@ -17,29 +18,22 @@ def detail(request):
 
 def create(request):
     if request.method == 'POST':
-        call = Call()
-        call.secretary_sector=Secretary.objects.get(pk=request.POST['secretary'])
-        call.requester=request.POST['requester'] 
-        call.problem=request.POST['problem'] 
+        form_call = CallForm(request.POST)
 
-        call.save()
+        if form_call.is_valid():
+            call = form_call.save()
+
+            messages.info(request, f'{call.id}')
         
-        #return HttpResponse("Postagem bem sucedida seu chamado é o {}".format(call.id))
-        return render(request, "called/information.html",
-                {
-                    'title_info': f"Postagem bem sucedida seu chamado é o {call.id}",
-                    'redirect' : '/',
-                    'text_redirect' : "Voltar para Home"
-                }
-            )
+        else:
+            form_call = CallForm()
+            context = { 'form_call' : form_call}
+            return render(request, 'called/create.html', context)
 
-    elif request.method == "GET" :
-        list_secretary = Secretary.objects.all()
-        context = { 'list_secretary' : list_secretary}
-        return render(request, 'called/create.html', context)
+    form_call = CallForm()
+    context = { 'form_call' : form_call}
+    return render(request, 'called/create.html', context)
 
-
-    return HttpResponse("Método não permitido", status=403)
 
 @login_required
 def close(request, id_call):

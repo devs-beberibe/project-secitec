@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Listagem{% endblock title %}
+
+{% block content %}
+    
+<main>
+    <section class="box container">
+        <form action="{% url 'detail' %}" method="get">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Número do Chamado</label>
+            <input name="call_id" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+        </div>
+        <button type="submit" class="btn btn-primary">Consutar</button>
+        </form>
+    </section>
+</main>
+    
+{% endblock content %}
+

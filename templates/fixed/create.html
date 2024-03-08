@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Criar{% endblock title %}
+
+{% block content %}
+<main class="">
+    <div class="shadow p-3">
+        <h1 class="h1 border-bottom">Ficha de verificação de componentes de computadores</h1>
+        <form action="." method="POST">
+            {% csrf_token %}
+            <div class="row row-cols-4 pb-3">
+                {{ ficha_form.data_recebimento|as_crispy_field }}
+                {{ ficha_form.numero_tombo|as_crispy_field }}
+                {{ ficha_form.deixado|as_crispy_field }}
+                {{ ficha_form.recebido|as_crispy_field }}
+                {{ ficha_form.setor|as_crispy_field }}
+                {{ ficha_form.responsavel_pc|as_crispy_field }}
+                {{ ficha_form.descricao_problema|as_crispy_field }}
+            </div>
+
+            <div>
+                {% for componente in componentes %}          
+                <div id="div_id_componente_{{ componente.id }}" class="row row-cols-3 border-top border-bottom">
+                    <div id="div_id_nome_{{ componente.id }}" class="control-group">
+                        <p>{{ componente.nome }}</p>
+                    </div>
+                    <div id="div_id_estado" class="control-group">
+                        <label for="id_estado" class="control-label requiredField">
+                        Contêm e o estado<span class="asteriskField">*</span>
+                        </label>
+                        <div class="controls">
+                                <select name="estado_{{ componente.id }}" class="select" id="id_estado">
+                                <option value="" selected="">--------</option>
+                                <option value="1">Contêm e bom estado</option>
+                                <option value="2">Contêm e mau estado</option>
+                                <option value="3">Não comtêm</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="div_id_observacao_descricao" class="control-group">
+                        <label for="id_observacao_descricao" class="control-label requiredField">
+                        Observação e descrição
+                        </label>
+                        <div class="controls">
+                            <input type="text" name="observacao_descricao_{{ componente.id }}" maxlength="20" class="textinput textInput" required="" id="id_observacao_descricao">
+                        </div>
+                    </div>  
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="row row-cols-2">
+                {{ ficha_form.observacao|as_crispy_field }}
+                {{ ficha_form.servico_realizado|as_crispy_field }}
+            </div>
+            
+            <div class="row row-cols-4 pt-3 border-top">
+                {{ ficha_form.buscado_por|as_crispy_field }}
+                {{ ficha_form.entrege_por|as_crispy_field }}
+                {{ ficha_form.laudo|as_crispy_field }}
+                {{ ficha_form.data_entrega|as_crispy_field }}
+            </div>
+            
+            {{ ficha_form.tecnico|as_crispy_field }}
+            
+            <a href="{% url 'index' %}" class="btn btn-danger">Cancelar</a>
+            <input class="btn btn-success" type="submit" value="Enviar">
+        </form>
+    </div>
+</main>
+{% endblock content %}

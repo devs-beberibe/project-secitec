@@ -40,7 +40,7 @@ a {
 }
 
 .status-open {
-    background-color: green;
+    background-color: red;
 }
 
 .status-in-processor {
@@ -48,7 +48,7 @@ a {
 }
 
 .status-close {
-    background-color: red;
+    background-color: green;
 }
 
 nav {

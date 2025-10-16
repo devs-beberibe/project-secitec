@@ -10,6 +10,7 @@ class Secretary(models.Model):
     def __str__(self):
         return self.name
 
+
 class Call(models.Model):
     
     STATUS_CALLED = [
@@ -21,10 +22,10 @@ class Call(models.Model):
     secretary_sector= models.ForeignKey(Secretary, on_delete=models.CASCADE) 
     problem = models.TextField('Problema', max_length=250)
     requester = models.CharField('Requisitante', max_length=100)
-    status = models.CharField(max_length=3, choices=STATUS_CALLED, default='OPN')
+    status = models.CharField('Status do Chamado', max_length=3, choices=STATUS_CALLED, default='OPN')
     date_start = models.DateField(default=timezone.now)
     date_end = models.DateField(default=None, blank=True, null=True)
-    solution = models.TextField(max_length=250, null=True, blank=True)
+    solution = models.TextField("Solução", max_length=250, null=True, blank=True)
     
     def __str__(self):
         return Secretary.objects.get(pk=self.secretary_sector.id).name
@@ -39,8 +40,8 @@ class Tecnico(models.Model):
         related_name='tecnico',        
     ) 
 
-    called = models.ManyToManyField(Call)#, related_name="call_tecnico")
+    called = models.ManyToManyField(Call)
     
     def __str__(self) -> str:
-        return f"Perfil de {self.user.username}"
+        return f"{self.user.first_name} {self.user.last_name}"
 

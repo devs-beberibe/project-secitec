@@ -5,6 +5,22 @@
 {% block content %}
 
 <section class="container">
+    <div id="pagination" class="d-flex justify-content-center">
+        <span id="step-link">
+            {% if called.has_previous %}
+                <a href="?{% if status %}status={{ status }}&{% endif %}pagina=1">&laquo;</a>
+                <a href="?{% if status %}status={{ status }}&{% endif %}pagina={{ called.previous_page_number }}">Anterior</a>
+            {% endif %}
+            <span id="current">
+                Página {{ called.number }} de {{ called.paginator.num_pages }}
+            </span>
+            {% if called.has_next %}
+                <a href="?{% if status %}status={{ status }}&{% endif %}pagina={{ called.next_page_number }}">Próxima<a>
+                <a href="?{% if status %}status={{ status }}&{% endif %}pagina={{ called.paginator.num_pages }}">&raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+
     {% if called %}
     <div class="row">
     {% for call in called %}
@@ -30,9 +46,9 @@
                     <p class="card-text">{{call.problem}}</p>
                     {% if call.status != 'CLS' %}
                     {% if call.status != 'IMP' %}
-                    <a href="{% url 'edit' call.id 'emAndamento' %}" class="btn btn-primary col-auto">Executar</a>
+                    <a href="{% url 'edit' call.id 'emAndamento' %}" class="btn btn-warning col-auto">Executar</a>
                     {% endif %}
-                    <a href="{% url 'close' call.id %}" class="btn btn-primary col-auto">Encerrar</a>
+                    <a href="{% url 'close' call.id %}" class="btn btn-success col-auto">Encerrar</a>
                     {% endif %}
                 </div>
             </div>

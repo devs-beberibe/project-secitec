@@ -225,3 +225,14 @@ nav {
 .shadow-select:hover {
     box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
 }
+
+#img_logo_secitec{
+    width: auto;
+    height: 80px; 
+}
+
+#logo_prefeitura_footer {
+    height: 200px;
+    width: auto;
+}
+

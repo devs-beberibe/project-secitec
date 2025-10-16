@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "project-secitec"
+name = "projeto-secitec"
 version = "0.1.0"
 description = ""
 authors = ["41SergioF <carlossergio2401@outook.com>"]

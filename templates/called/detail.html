@@ -1,38 +1,54 @@
 {% extends 'base.html' %}
 
-{% block title %}Detalhe{% endblock %}
+{% block title %}Detalhes{% endblock %}
 
-{% block content %}
-  {% if call %}
-
+{% block content%}
 <section class="box container col-sm-12 col-lg-6">
   <div class="card">
     <div class="card-body">
-        <div class="d-flex flex-row justify-content-between align-items-center">
-          <h5 class="card-title">{{call.secretary_sector}}</h5>
-          {% if call.status == "OPN" %}
+        <div class="border-bottom mx-3">
+          <div class="d-flex flex-row justify-content-between align-items-center">
+            <h5 class="card-title">{{call.secretary_sector}}</h5>
+            {% if call.status == "OPN" %}
             <div class="status status-open"></div>
-          {% elif call.status == "IMP" %}
-              <div class="status status-in-processor"></div>
-          {% else %}
-
-              <div class="status status-close"></div>
-          {% endif %}
+            {% elif call.status == "IMP" %}
+            <div class="status status-in-processor"></div>
+            {% else %}
+            <div class="status status-close"></div>
+            {% endif %}
+          </div>
+          <h6 class="card-subtitle text-muted">Número do chamado: {{call.id}}</h6>
+          <div class="row row-cols-lg-2">
+            <p class="card-text">{{call.date_start}}</p>
+            {% if call.status == "CLS"%}
+            <p class="card-text">{{call.date_end}}</p>
+            {% endif %}
+          </div>
         </div>
-        <h6 class="card-subtitle text-muted">Número do chamado: {{call.id}}</h6>
-        <p class="card-text">{{call.date_start}}</p>
-        {% if call.date_end %}
-        {% if call.status == "CLS"%}
-        <p class="card-text">{{call.date_end}}</p>
+        <p class="card-text"><p class="fw-bold d-inline">Requisitante:</p> {{call.requester}}</p>
+        <p class="card-text"><p class="fw-bold d-inline">Problemas:</p> {{call.problem}}</p>
+        
+        {% if tecnicos %}        
+        <h6 class="fw-bold">Tecnicos que Realizaram o Chamado</h6>
+          <div class="row-cols-1 row-cols-lg-2">
+            {% for tecnico in tecnicos %}
+            <div class="form-check">
+                {{tecnico.user.first_name}} {{tecnico.user.last_name}}
+            </div>
+            {% endfor %}
+          </div>
+        <div class="mb-3">
+          <p class="fw-bold">O Que Foi Realizado ?</p>
+          <p class="fst-italic border p-2">
+            {% if call.solution == None or call.solution == "" %}
+            Não houve descrição da resolução do problema
+            {% else %}
+            {{ call.solution }}
+            {% endif %}
+          </p>
+        </div>
         {% endif %}
-        <p class="card-text">{{call.requester}}</p>
-        <p class="card-text">{{call.problem}}</p>    
-      </div>
+    </div>
   </div>
 </section>
-  {% else %}
-    <h1 class="content box text-center">
-      Esse chamado não existe!
-    </h1>
-  {% endif %}
-{% endblock %}
+{% endblock content%}

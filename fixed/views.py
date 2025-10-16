@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 from .forms import FichaVerificacaoComponentesForm
-from .models import Componente
+from .models import Componente, FichaVerificacaoComponentes
 
 def create(request):
 
@@ -19,3 +19,13 @@ def create(request):
     }
 
     return render(request, "fixed/create.html", context=context)
+
+
+def list_fix(request):
+    fixed = FichaVerificacaoComponentes.objects.all()
+
+    context = {
+        "fixed": fixed
+    }
+
+    return render(request, "fixed/list_fix.html", context=context)

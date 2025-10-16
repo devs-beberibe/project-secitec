@@ -1,22 +1,32 @@
 from django.db import models
 from django.utils import timezone
 
+from django.contrib.auth.models import User
+
 from called.models import Tecnico
+
+
+class Setor(models.Model):
+
+    nome = models.CharField("Nome do Setor", max_length=50, unique=True)
+
+    def __str__(self):
+        return self.nome
 
 
 class FichaVerificacaoComponentes(models.Model):
     data_recebimento = models.DateField("data do recebimento", default=timezone.now)
     numero_tombo = models.CharField("Número do tombo", max_length=10, default="")
     deixado = models.CharField("Deixado e conferido por", max_length=50, default="")
-    recebido = models.CharField("Recebido por", max_length=50, default="")
-    setor = models.CharField("Setor", max_length=50, default="")
+    recebido = models.ForeignKey(User, on_delete=models.CASCADE, related_name="recebido_por")
+    setor = models.ForeignKey(Setor, on_delete=models.CASCADE)
     responsavel_pc = models.CharField("Responsável pelo PC", max_length=50, default="")
     descricao_problema = models.CharField("Descrição do Problema", max_length=200, default="")
 
     observacao = models.TextField("Observações", max_length=300, default="")
     servico_realizado = models.TextField("Serviço Realizado", max_length=300, default="")
     buscado_por = models.CharField("Entrege e conferido por", max_length=50, default="")
-    entrege_por = models.CharField("Entrege por", max_length=50, default="")
+    entrege_por = models.ForeignKey(User, on_delete=models.CASCADE, related_name="entrege_por")
     laudo = models.CharField("Número do Laudo", max_length=10, default="")
     data_entrega = models.DateField("data da entrega", null=True, default=None)
     tecnico = models.ForeignKey(Tecnico, on_delete=models.CASCADE)
@@ -46,3 +56,5 @@ class ComponenteEstado(models.Model):
 
     def __str__(self):
         return f'{self.componente}, {self.estado}'
+
+    

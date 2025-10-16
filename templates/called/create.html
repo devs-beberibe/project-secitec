@@ -26,16 +26,33 @@
     </ul>
     {% endif %}
 
-    <div class="container mb-2 mx-auto p-2 w-50 rounded bg-pesonalite-color">
-        <h1>Fazer Chamado</h1>
-        <p>Preencha os campos abaixo para realizar o chamado.</p>
+    <div class="container mb-2 mx-auto p-3 w-50 border rounded shadow">
+        <h1 class="text-center">Abrir Chamado</h1>
+        <p class="text-center border-bottom mx-4">Preencha os campos abaixo para realizar o chamado.</p>
         <form action="{% url 'create' %}" method="post">
             {% csrf_token %}
-            {{ form_call.secretary_sector|as_crispy_field }}
-            {{ form_call.requester|as_crispy_field }}
-            {{ form_call.problem|as_crispy_field }}
-            <button type="submit" class="btn btn-primary">Enviar</button>
+            <div class="row">
+                <div class="col-12 col-lg-6">
+                    {{ form_call.secretary_sector|as_crispy_field }}
+                </div>
+                <div class="col-12 col-lg-6">
+                    {{ form_call.requester|as_crispy_field }}
+                </div>
+                <div class="col-12 col-lg-12">
+                    {{ form_call.problem|as_crispy_field }}
+                </div>
+            </div>
+            <div class="d-flex justify-content-end my-2">
+                <button type="submit" class="btn btn-success">Enviar</button>
+            </div> 
         </form>
     </div>
 </main>
 {% endblock content %}
+
+{% block script %}
+<script>
+    document.querySelector("#div_id_secretary_sector>label").innerText = "Secretaria/Setor";
+    document.querySelector("#id_problem").classList.add("w-100");
+</script>
+{% endblock script %}

@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Listagem{% endblock title %}
+
+{% block content %}
+
+<section class="container">
+    {% if fixed %}
+    <div class="accordion" id="accordionExample">
+        {% for fix in fixed %}
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#id_element_{{ fix.id }}" aria-expanded="true" aria-controls="id_element_{{ fix.id }}">
+                    Tombo:{% if fix.numero_tombo %}
+                    {{ fix.numero_tombo }}
+                    {% else %}
+                    S/T
+                    {% endif %}
+                    - {{ fix.setor }}
+                </button>
+            </h2>
+            <div id="id_element_{{ fix.id }}" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="row row-cols-1 row-cols-lg-2">
+                        <p class="mb-0">Data de Recebimento: <strong>{{ fix.data_recebimento }}</strong></p>
+                        <p class="mb-0">Número do Tombo: <strong>{{ fix.numero_tombo }}</strong></p>
+                        <p class="mb-0">Deixado por: <strong>{{ fix.deixado }}</strong></p>
+                        <p class="mb-0">Recebido por: <strong>{{ fix.recebido }}</strong></p>
+                        <p class="mb-0">Secretaria/Setor: <strong>{{ fix.setor }}</strong></p>
+                        <p class="mb-0">Responsável pela Maquína: <strong>{{ fix.responsavel_pc }}</strong></p>
+                        <p class="mb-0">Descricao do Problema: <strong>{{ fix.descricao_problema }}</strong></p>
+                        <p class="mb-0">Observacao: <strong>{{ fix.observacao }}</strong></p>
+                        <p class="mb-0">Serviço Realizado: <strong>{{ fix.servico_realizado }}</strong></p>
+                        <p class="mb-0">Buscado por: <strong>{{ fix.buscado_por }}</strong></p>
+                        <p class="mb-0">Entrege por: <strong>{{ fix.entrege_por }}</strong></p>
+                        <p class="mb-0">Número do Laudo: <strong>{{ fix.laudo }}</strong></p>
+                        <p class="mb-0">Data da Entrega: <strong>{{ fix.data_entrega }}</strong></p>
+                        <p class="mb-0">Técnico: <strong>{{ fix.tecnico }}</strong></p>
+                        <p class="mb-0">tecnico: <strong>{{ fix.componente_estado }}</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <h1>Sem chamados</h1>
+    {% endif %} 
+</section>
+    
+{% endblock content %}

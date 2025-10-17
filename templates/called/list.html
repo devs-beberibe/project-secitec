@@ -57,7 +57,12 @@
     </div>
     {% else %}
     <h1>Sem chamados</h1>
-    {% endif %} 
+    {% endif %}
+    <div class="position-absolute bottom-0 w-100 py-1 d-flex gap-2 justify-content-center">
+        <a href="{% url 'list' %}?status=abertos&pagina=1" class="btn btn-danger">Abertos</a>
+        <a href="{% url 'list' %}?status=emAndamento&pagina=1" class="btn btn-warning">Em Andamento</a>
+        <a href="{% url 'list' %}?status=encerrados&pagina=1" class="btn btn-success">Encerados</a>
+    </div>
 </section>
     
 {% endblock content %}

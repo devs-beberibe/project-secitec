@@ -14,22 +14,25 @@ class Setor(models.Model):
         return self.nome
 
 
-class FichaVerificacaoComponentes(models.Model):
+class FichaDeManutencao(models.Model):
+    # Atributos referentes ao recebimento
     data_recebimento = models.DateField("data do recebimento", default=timezone.now)
-    numero_tombo = models.CharField("Número do tombo", max_length=10, default="")
+    numero_tombo = models.CharField("Número do tombo/série", max_length=30, default="")
     deixado = models.CharField("Deixado e conferido por", max_length=50, default="")
     recebido = models.ForeignKey(User, on_delete=models.CASCADE, related_name="recebido_por")
     setor = models.ForeignKey(Setor, on_delete=models.CASCADE)
     responsavel_pc = models.CharField("Responsável pelo PC", max_length=50, default="")
     descricao_problema = models.CharField("Descrição do Problema", max_length=200, default="")
+    contato = models.CharField("Contato", max_length=50)
 
-    observacao = models.TextField("Observações", max_length=300, default="")
-    servico_realizado = models.TextField("Serviço Realizado", max_length=300, default="")
-    buscado_por = models.CharField("Entrege e conferido por", max_length=50, default="")
-    entrege_por = models.ForeignKey(User, on_delete=models.CASCADE, related_name="entrege_por")
-    laudo = models.CharField("Número do Laudo", max_length=10, default="")
-    data_entrega = models.DateField("data da entrega", null=True, default=None)
-    tecnico = models.ForeignKey(Tecnico, on_delete=models.CASCADE)
+    # Atributos referentes a entrega
+    observacao = models.TextField("Observações", max_length=300, default="", null=True, blank=True)
+    servico_realizado = models.TextField("Serviço Realizado", max_length=300, default="", null=True, blank=True)
+    buscado_por = models.CharField("Entrege e conferido por", max_length=50, default="", null=True, blank=True)
+    entrege_por = models.ForeignKey(User, on_delete=models.CASCADE, related_name="entrege_por", null=True, blank=True)
+    laudo = models.CharField("Número do Laudo", max_length=10, default="", null=True, blank=True)
+    data_entrega = models.DateField("data da entrega", null=True, blank=True, default=None)
+    tecnico = models.ForeignKey(Tecnico, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.numero_tombo
@@ -49,7 +52,7 @@ class ComponenteEstado(models.Model):
         (3, "Não contêm"),
     )
 
-    ficha = models.ForeignKey(FichaVerificacaoComponentes, on_delete=models.CASCADE)
+    ficha = models.ForeignKey(FichaDeManutencao, on_delete=models.CASCADE)
     componente = models.ForeignKey(Componente, on_delete=models.CASCADE)
     estado = models.IntegerField('Contêm e o estado', choices=CASE)
     observacao_descricao = models.CharField('Observação e descrição', max_length=20, null=True)

@@ -4,67 +4,101 @@
 {% block title %}Criar{% endblock title %}
 
 {% block content %}
+
+{% if messages %}
+<ul id="messages" class="p-0">
+    {% for message in messages %}
+    <li {% if message.tags %} class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} d-flex justify-content-between align-items-center" {% endif %} role="alert">
+        <p class="m-auto">{{ message }}</p>
+        <button type="button" id="button-messagens" class="btn text-light" onclick="removeMessage()">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="25" height="25" viewBox="0 0 384 512">
+            <!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - 
+            https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+            <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7
+                86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5
+                12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 
+                12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/>
+            </svg>
+        </button>
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
 <main class="">
     <div class="shadow p-3">
-        <h1 class="h1 border-bottom text-center py-3">Ficha de verificação de componentes do computadores</h1>
+        <h1 class="h1 border-bottom text-center">Ficha de Manutenção - Entrada</h1>
         <form action="." method="POST">
             {% csrf_token %}
             <div class="row">
                 <div class="col-12 col-lg-2">
                     {{ ficha_form.data_recebimento|as_crispy_field }}
                 </div>
-                <div class="col-12 col-lg-2">
+                <div class="col-12 col-lg-3">
                     {{ ficha_form.numero_tombo|as_crispy_field }}
                 </div>
                 <div class="col-12 col-lg-4">
                     {{ ficha_form.deixado|as_crispy_field }}
                 </div>
-                <div class="col-12 col-lg-4">
+                <div class="col-12 col-lg-3">
                     {{ ficha_form.recebido|as_crispy_field }}
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-12 col-lg-4 ">
+                <div class="col-12 col-lg-3 ">
                     {{ ficha_form.setor|as_crispy_field }}
                 </div>
-                <div class="col-12 col-lg-4">
+                <div class="col-12 col-lg-3">
                     {{ ficha_form.responsavel_pc|as_crispy_field }}
                 </div>
-                <div class="col-12 col-lg-4">
+                <div class="col-12 col-lg-3">
+                    {{ ficha_form.contato|as_crispy_field }}
+                </div>
+                <div class="col-12 col-lg-3">
                     {{ ficha_form.descricao_problema|as_crispy_field }}
                 </div>
             </div>
 
-            <div class="w-75 container">
-                {% for componente in componentes %}          
-                <div id="div_id_componente_{{ componente.id }}" class="row row-cols-3 border-top border-bottom">
-                    <div id="div_id_nome_{{ componente.id }}" class="control-group">
-                        <p>{{ componente.nome }}</p>
-                    </div>
-                    <div id="div_id_estado" class="control-group">
-                        <label for="id_estado" class="control-label requiredField">
-                        Contêm e o estado<span class="asteriskField">*</span>
-                        </label>
-                        <div class="controls">
-                                <select name="estado_{{ componente.id }}" class="select" id="id_estado">
-                                <option value="" selected="">--------</option>
-                                <option value="1">Contêm e bom estado</option>
-                                <option value="2">Contêm e mau estado</option>
-                                <option value="3">Não contêm</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div id="div_id_observacao_descricao" class="control-group">
-                        <label for="id_observacao_descricao" class="control-label requiredField">
-                        Observação e descrição
-                        </label>
-                        <div class="controls">
-                            <input type="text" name="observacao_descricao_{{ componente.id }}" maxlength="20" class="textinput textInput" id="id_observacao_descricao">
-                        </div>
-                    </div>  
-                </div>
-                {% endfor %}
+            {% if 'saida' in request.path %}
+            <div id="id_div_componentes" class="w-75 container">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Peça</th>
+                        <th scope="col">Contêm e o estado</th>
+                        <th scope="col">Observação e descrição</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for componente in componentes %}
+                    <tr>
+                        <th scope="row">{{ componente.id }}</th>
+                        <td>{{ componente.nome }}</td>
+                        <td>
+                            <div id="div_id_estado" class="control-group">
+                                <div class="controls">
+                                        <select name="estado_{{ componente.id }}" class="select" id="id_estado">
+                                        <option value="" selected="">--------</option>
+                                        <option value="1">Contêm e bom estado</option>
+                                        <option value="2">Contêm e mau estado</option>
+                                        <option value="3">Não contêm</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </td>
+                        <td>     
+                            <div id="div_id_observacao_descricao" class="control-group">
+                                <div class="controls">
+                                    <input type="text" name="observacao_descricao_{{ componente.id }}" maxlength="20" class="textinput textInput" id="id_observacao_descricao">
+                                </div>
+                            </div> 
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
             </div>
 
             <div class="row row-cols-2">
@@ -89,8 +123,9 @@
                     {{ ficha_form.tecnico|as_crispy_field }}
                 </div>
             </div>
+            {% endif %}
             
-            <div class="d-flex justify-content-center gap-2">
+            <div class="d-flex justify-content-end gap-2">
                 <a href="{% url 'index' %}" class="btn btn-danger">Cancelar</a>
                 <input class="btn btn-success" type="submit" value="Enviar">
             </div>
@@ -98,3 +133,8 @@
     </div>
 </main>
 {% endblock content %}
+{% block script %}
+<script>
+    inputUppercase();
+</script>
+{% endblock script %}

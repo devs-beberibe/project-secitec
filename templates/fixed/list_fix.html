@@ -5,22 +5,30 @@
 {% block content %}
 
 <section class="container">
-    {% if fixed %}
-    <div class="accordion" id="accordionExample">
+    <ul class="list-group list-group-flush">
         {% for fix in fixed %}
-        <div class="accordion-item">
-            <h2 class="accordion-header">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#id_element_{{ fix.id }}" aria-expanded="true" aria-controls="id_element_{{ fix.id }}">
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-8 overflow-x-auto">
                     Tombo:{% if fix.numero_tombo %}
                     {{ fix.numero_tombo }}
                     {% else %}
                     S/T
                     {% endif %}
                     - {{ fix.setor }}
-                </button>
-            </h2>
-            <div id="id_element_{{ fix.id }}" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
+                </div>
+                <div class="d-flex justify-content-end col-4">
+                    <a href="{% url "update_fixed" fix.id %}" class="btn btn-outline-success">
+                        <i class="bi bi-gear"></i>
+                    </a>
+                    <button class="btn btn-outline-success" type="button" data-bs-toggle="collapse" 
+                        data-bs-target="#id_detail_{{ fix.id }}" aria-expanded="false" aria-controls="id_detail_{{ fix.id }}">
+                        <i class="bi bi-caret-down-fill"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="collapse" id="id_detail_{{ fix.id }}">
+                <div class="card card-body">
                     <div class="row row-cols-1 row-cols-lg-2">
                         <p class="mb-0">Data de Recebimento: <strong>{{ fix.data_recebimento }}</strong></p>
                         <p class="mb-0">Número do Tombo: <strong>{{ fix.numero_tombo }}</strong></p>
@@ -36,16 +44,15 @@
                         <p class="mb-0">Número do Laudo: <strong>{{ fix.laudo }}</strong></p>
                         <p class="mb-0">Data da Entrega: <strong>{{ fix.data_entrega }}</strong></p>
                         <p class="mb-0">Técnico: <strong>{{ fix.tecnico }}</strong></p>
-                        <p class="mb-0">tecnico: <strong>{{ fix.componente_estado }}</strong></p>
+                        <p class="mb-0">Estado do Componente: <strong>{{ fix.componente_estado }}</strong></p>
                     </div>
                 </div>
             </div>
-        </div>
-        {% endfor %}
-    </div>
-    {% else %}
-    <h1>Sem chamados</h1>
-    {% endif %} 
+        </li>
+        {% empty %}
+        <h1>Sem chamados</h1>
+        {% endfor %} 
+    </ul>
 </section>
     
 {% endblock content %}

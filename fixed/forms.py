@@ -1,10 +1,10 @@
 from django import forms
-from .models import FichaVerificacaoComponentes, ComponenteEstado
+from .models import FichaDeManutencao, ComponenteEstado
 
 
-class FichaVerificacaoComponentesForm(forms.ModelForm):
+class FichaDeManutencaoForm(forms.ModelForm):
     class Meta:
-        model = FichaVerificacaoComponentes
+        model = FichaDeManutencao
         fields = "__all__"
 
 

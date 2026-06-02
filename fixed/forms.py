@@ -1,14 +1,14 @@
 from django import forms
-from .models import FichaDeManutencao, ComponenteEstado
+from .models import MaintenanceSheet, ComponentStatus
 
 
-class FichaDeManutencaoForm(forms.ModelForm):
+class MaintenanceSheetForm(forms.ModelForm):
     class Meta:
-        model = FichaDeManutencao
+        model = MaintenanceSheet
         fields = "__all__"
 
 
-class ComponenteEstadoForm(forms.ModelForm):
+class ComponentStatusForm(forms.ModelForm):
     class Meta:
-        model = ComponenteEstado
+        model = ComponentStatus
         fields = "__all__"

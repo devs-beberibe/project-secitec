@@ -1,10 +1,10 @@
 from django.contrib import admin
 from .models import (
-    FichaDeManutencao,
-    Componente,
-    ComponenteEstado,
+    MaintenanceSheet,
+    Component,
+    ComponentStatus,
 )
 
-admin.site.register(FichaDeManutencao)
-admin.site.register(Componente)
-admin.site.register(ComponenteEstado)
+admin.site.register(MaintenanceSheet)
+admin.site.register(Component)
+admin.site.register(ComponentStatus)

@@ -28,28 +28,8 @@
           </button>
           <span></span>
           <div class="collapse navbar-collapse" id="navbars-base">
-            <ul class="navbar-nav me-auto mb-2 mb-sm-0">
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'list' %}?status=abertos&pagina=1">Lista de Chamados</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'create' %}">Fazer Chamado</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'create_fixed' %}">Ficha</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'list_fixed' %}">Listagem de Fichas</a>
-              </li>
-            </ul>
-            
-            <div id="id-user-profile" class="dropdown custom-dropdown me-1">
-              <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <div id="id-user-profile" class="badge text-bg-warning"> 
                 {{ user.username }}
-              </button>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="{% url 'logout' %}">Sair</a></li>
-              </ul>
             </div>
           </div>
         </div>
@@ -57,7 +37,7 @@
       {% else %}
 
       <div id="id-user-profile" class="color-yellow rounded-2 py-1 px-2 my-2 me-3">
-        <a id="login-logout" class="d-flex align-items-center my-1" href="{% url 'login' %}">
+        <a id="login-logout" class="d-flex align-items-center my-1" href="# ">
           <p class="mb-0 me-2">login</p>
           <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 448 512">
           <!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - 

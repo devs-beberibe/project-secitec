@@ -5,10 +5,12 @@ description = ""
 authors = ["41SergioF <carlossergio2401@outook.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = ">=3.10,<4.0"
 Django = "^4.1"
-python-decouple = "^3.6"
+python-decouple = "3.6"
 django-crispy-forms = "^1.14.0"
+djangorestframework = "^3.17.1"
+black = "^26.5.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

@@ -1,28 +1,29 @@
 from django.db import models
 from django.utils import timezone
 
-from django.contrib.auth.models import User
+from django.conf import settings
 
-from called.models import Technician
+from called.models import *
 
 
-class Sector(models.Model):
 
-    name = models.CharField("Nome do Setor", max_length=50, unique=True)
-
-    def __str__(self):
-        return self.name
 
 
 class MaintenanceSheet(models.Model):
     # Atributos referentes ao recebimento
+    
     receipt_date = models.DateField("data do recebimento", default=timezone.now)
     serial_number = models.CharField("Número do tombo/série", max_length=30, default="")
     left_by = models.CharField("Deixado e conferido por", max_length=50, default="")
     receipt = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="recebido_por"
+    settings.AUTH_USER_MODEL,
+    on_delete=models.CASCADE,
+    related_name="recebido_por"
     )
-    sector = models.ForeignKey(Sector, on_delete=models.CASCADE)
+    secretary_sector = models.ForeignKey(
+        "called.SecretarySector",
+        on_delete=models.CASCADE
+    )
     pc_responsible = models.CharField("Responsável pelo PC", max_length=50, default="")
     problem_description = models.CharField(
         "Descrição do Problema", max_length=200, default=""
@@ -40,12 +41,12 @@ class MaintenanceSheet(models.Model):
         "Entrege e conferido por", max_length=50, default="", null=True, blank=True
     )
     delivered_by = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name="entrege_por",
-        null=True,
-        blank=True,
-    )
+    settings.AUTH_USER_MODEL,
+    on_delete=models.CASCADE,
+    related_name="entregue_por",
+    null=True,
+    blank=True,
+)
     report = models.CharField(
         "Número do Laudo", max_length=10, default="", null=True, blank=True
     )
@@ -55,6 +56,7 @@ class MaintenanceSheet(models.Model):
     technician = models.ForeignKey(
         Technician, on_delete=models.CASCADE, null=True, blank=True
     )
+
 
     def __str__(self):
         return self.serial_number

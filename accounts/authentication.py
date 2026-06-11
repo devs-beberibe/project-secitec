@@ -1,6 +1,7 @@
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 
+
 class CookieJWTAuthentication(JWTAuthentication):
     def authenticate(self, request):
         print("COOKIES:", request.COOKIES)

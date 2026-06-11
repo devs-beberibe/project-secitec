@@ -1,10 +1,10 @@
 from django.contrib import admin
 from .models import (
     MaintenanceSheet,
-    Component,
+    Components,
     ComponentStatus,
 )
 
 admin.site.register(MaintenanceSheet)
-admin.site.register(Component)
+admin.site.register(Components)
 admin.site.register(ComponentStatus)

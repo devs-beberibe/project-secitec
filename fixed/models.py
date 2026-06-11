@@ -6,23 +6,17 @@ from django.conf import settings
 from called.models import *
 
 
-
-
-
 class MaintenanceSheet(models.Model):
     # Atributos referentes ao recebimento
-    
+
     receipt_date = models.DateField("data do recebimento", default=timezone.now)
     serial_number = models.CharField("Número do tombo/série", max_length=30, default="")
     left_by = models.CharField("Deixado e conferido por", max_length=50, default="")
     receipt = models.ForeignKey(
-    settings.AUTH_USER_MODEL,
-    on_delete=models.CASCADE,
-    related_name="recebido_por"
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="recebido_por"
     )
     secretary_sector = models.ForeignKey(
-        "called.SecretarySector",
-        on_delete=models.CASCADE
+        "called.SecretarySector", on_delete=models.CASCADE
     )
     pc_responsible = models.CharField("Responsável pelo PC", max_length=50, default="")
     problem_description = models.CharField(
@@ -41,12 +35,12 @@ class MaintenanceSheet(models.Model):
         "Entrege e conferido por", max_length=50, default="", null=True, blank=True
     )
     delivered_by = models.ForeignKey(
-    settings.AUTH_USER_MODEL,
-    on_delete=models.CASCADE,
-    related_name="entregue_por",
-    null=True,
-    blank=True,
-)
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="entregue_por",
+        null=True,
+        blank=True,
+    )
     report = models.CharField(
         "Número do Laudo", max_length=10, default="", null=True, blank=True
     )
@@ -57,12 +51,11 @@ class MaintenanceSheet(models.Model):
         Technician, on_delete=models.CASCADE, null=True, blank=True
     )
 
-
     def __str__(self):
         return self.serial_number
 
 
-class Component(models.Model):
+class Components(models.Model):
     name = models.CharField("Nome", max_length=20, unique=True)
 
     def __str__(self):
@@ -76,8 +69,10 @@ class ComponentStatus(models.Model):
         (3, "Não contêm"),
     )
 
-    sheet = models.ForeignKey(MaintenanceSheet, on_delete=models.CASCADE)
-    component = models.ForeignKey(Component, on_delete=models.CASCADE)
+    sheet = models.ForeignKey(
+        MaintenanceSheet, on_delete=models.CASCADE, related_name="components_status"
+    )
+    component = models.ForeignKey(Components, on_delete=models.CASCADE)
     status = models.IntegerField("Contêm e o estado", choices=CASE)
     description_report = models.CharField(
         "Observação e descrição", max_length=20, null=True

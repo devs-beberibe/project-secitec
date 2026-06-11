@@ -14,6 +14,7 @@ class IsAdministracao(BasePermission):
             )
         )
 
+
 class IsTecnico(BasePermission):
     message = "Apenas Técnicos podem acessar esta rota."
 

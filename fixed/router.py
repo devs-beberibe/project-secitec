@@ -5,12 +5,18 @@ from .viewset import *
 
 router = DefaultRouter()
 
-router.register(r"componentes",ComponentViewSet,basename="componentes",)
+router.register(r"componentes", ComponentViewSet, basename="componentes")
 
-router.register(r"status-componentes",StatusComponentesViewSet,basename="status-componentes",)
+router.register(r"manutencao", MaintenanceViewSet, basename="manutencao")
 
-router.register(r"ficha-saida",FichaSaidaViewSet,basename="ficha-saida",)
+router.register(
+    r"ficha-saida",
+    FichaSaidaViewSet,
+    basename="ficha-saida",
+)
 
-router.register(r"ficha-entrada",FichaEntradaViewSet,basename="ficha-entrada",)
-
-router.register(r"administracao-ficha",AdministracaoFichaViewSet,basename="administracao-ficha",)
+router.register(
+    r"ficha-entrada",
+    FichaEntradaViewSet,
+    basename="ficha-entrada",
+)

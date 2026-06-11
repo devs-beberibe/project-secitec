@@ -6,29 +6,25 @@ from .models import *
 from .serializers import *
 
 
+class ComponentViewSet(viewsets.ModelViewSet):
+    queryset = Components.objects.all()
+    serializer_class = ComponentSerializer
+    permission_classes = [IsTecnico | IsAdministracao]
+
 
 class FichaEntradaViewSet(viewsets.ModelViewSet):
     queryset = MaintenanceSheet.objects.all()
-    serializer_class = FichaEntradaSerializer
-    permission_classes = [IsTecnico]
+    serializer_class = ReceiveFixSerializer
+    permission_classes = [IsTecnico | IsAdministracao]
+
+
+class MaintenanceViewSet(viewsets.ModelViewSet):
+    queryset = MaintenanceSheet.objects.all()
+    serializer_class = MaintenanceSerializer
+    permission_classes = [IsTecnico | IsAdministracao]
+
 
 class FichaSaidaViewSet(viewsets.ModelViewSet):
     queryset = MaintenanceSheet.objects.all()
-    serializer_class = FichaSaidaSerializer
-    permission_classes = [IsTecnico]
-
-
-class ComponentViewSet(viewsets.ModelViewSet):
-    queryset = Component.objects.all()
-    serializer_class = ComponentSeriliazer
-    permission_classes = [IsAdminUser]
-
-class AdministracaoFichaViewSet(viewsets.ModelViewSet):
-    queryset = MaintenanceSheet.objects.all()
-    serializer_class = AdministracaoFichaSerializer
-    permission_classes = [IsAdministracao]
-
-class StatusComponentesViewSet(viewsets.ModelViewSet):
-    queryset = ComponentStatus.objects.all()
-    serializer_class = StatusComponentesSerializer
-    permission_classes = [IsAdminUser]
+    serializer_class = CloseFixSerializer
+    permission_classes = [IsTecnico | IsAdministracao]

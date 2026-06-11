@@ -7,14 +7,14 @@ from .serializers import *
 from accounts.permissions import IsAdministracao, IsTecnico
 
 
-class SecretaryViewSet(viewsets.ModelViewSet):
+class SecretaryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = SecretarySector.objects.all()
     serializer_class = SecretarySerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated]
 
-        
-class PublicCallViewSet(viewsets.ModelViewSet):
-    serializer_class = PublicCallSerialzier
+
+class CreateCallViewSet(viewsets.ModelViewSet):
+    serializer_class = CreateCallSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -24,27 +24,15 @@ class PublicCallViewSet(viewsets.ModelViewSet):
             return Call.objects.all()
 
         return Call.objects.filter(secretary_sector__user=user)
-    
-#Viewset de chamados pra administradores da secretaria
-class AdministracaoSecCallViewSet(viewsets.ModelViewSet):
-    queryset = Call.objects.all()
-    serializer_class = AdministracaoCallSerializer
-    permission_classes = [IsAdministracao]
 
 
-class TechnicianCallViewSet(viewsets.ModelViewSet):
+class UptdateCallViewSet(viewsets.ModelViewSet):
     queryset = Call.objects.all()
-    serializer_class = TecnicoCallSerializer
+    serializer_class = UpdateCallSerializer
     permission_classes = [IsTecnico]
 
 
-#Viewset de chamados para administradores do sistema
-class AdminViewSet(viewsets.ModelViewSet):
-    queryset = Call.objects.all()
-    serializer_class = AdminCallSerializer
-    permission_classes = [IsAdminUser]
-
-class TechnicianViewSet(viewsets.ModelViewSet):
+class TecnicoViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Technician.objects.all()
     serializer_class = TecnicoSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated]

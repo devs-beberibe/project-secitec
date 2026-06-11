@@ -9,36 +9,43 @@ class SecretarySerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class PublicCallSerialzier(serializers.ModelSerializer):
-    problem = serializers.CharField(max_length=255, write_only=True)
-    requester = serializers.CharField(max_length=125, write_only=True)
-    class Meta:
-        model = Call
-        fields = ("secretary_sector","problem","requester")
+class CreateCallSerializer(serializers.ModelSerializer):
+    # Serializador para leitura (GET)
+    secretary_sector = SecretarySerializer(read_only=True)
 
+    # Serializador para escrita (POST)
+    secretary_sector_id = serializers.PrimaryKeyRelatedField(
+        queryset=SecretarySector.objects.all(),
+        source="secretary_sector",
+        write_only=True,
+    )
 
-class AdminCallSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Call
-        fields = "__all__"
-
-class AdministracaoCallSerializer(serializers.ModelSerializer):
-    problem = serializers.CharField(max_length=255, write_only=True)
-    requester = serializers.CharField(max_length=125, write_only=True)
-    solution = serializers.CharField(max_length=255, read_only=True)
+    problem = serializers.CharField
+    requester = serializers.CharField
 
     class Meta:
         model = Call
-        fields = ("secretary_sector","problem","requester","solution")
+        fields = (
+            "id",
+            "secretary_sector_id",
+            "secretary_sector",
+            "problem",
+            "requester",
+        )
 
-class TecnicoCallSerializer(serializers.ModelSerializer):
-    problem = serializers.CharField(max_length=255, read_only=True)
-    requester = serializers.CharField(max_length=125, read_only=True)
-    solution = serializers.CharField(max_length=255, write_only=True)
+
+class UpdateCallSerializer(serializers.ModelSerializer):
     status = serializers.ChoiceField(choices=Call.STATUS_CALLED)
+    solution = serializers.CharField()
+    date_end = serializers.DateField()
+    technician = serializers.PrimaryKeyRelatedField(
+        queryset=Technician.objects.all(), many=True
+    )
+
     class Meta:
         model = Call
-        fields = ("secretary_sector","problem","requester","solution","status","date_end")
+        fields = ("status", "solution", "date_end", "technician")
+
 
 class TecnicoSerializer(serializers.ModelSerializer):
     class Meta:

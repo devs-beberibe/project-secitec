@@ -4,8 +4,6 @@ from .router import router
 
 from rest_framework import routers
 
-urlpatterns = [
-
-]
+urlpatterns = []
 
 urlpatterns += router.urls

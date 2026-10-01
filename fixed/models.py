@@ -9,14 +9,12 @@ from called.models import *
 class MaintenanceSheet(models.Model):
     # Atributos referentes ao recebimento
 
-    receipt_date = models.DateField("data do recebimento", default=timezone.now)
+    receipt_date = models.DateField("Data do recebimento", default=timezone.now)
     serial_number = models.CharField("Número do tombo/série", max_length=30, default="")
     left_by = models.CharField("Deixado e conferido por", max_length=50, default="")
-    receipt = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="recebido_por"
-    )
+    receipt = models.ForeignKey(User, on_delete=models.CASCADE, related_name="recebido_por")
     secretary_sector = models.ForeignKey(
-        "called.SecretarySector", on_delete=models.CASCADE
+        "called.Sector", on_delete=models.CASCADE, related_name=""
     )
     pc_responsible = models.CharField("Responsável pelo PC", max_length=50, default="")
     problem_description = models.CharField(
@@ -47,16 +45,14 @@ class MaintenanceSheet(models.Model):
     delivery_date = models.DateField(
         "data da entrega", null=True, blank=True, default=None
     )
-    technician = models.ForeignKey(
-        Technician, on_delete=models.CASCADE, null=True, blank=True
-    )
+    #technician = models.ForeignKey(Technician, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.serial_number
 
 
 class Components(models.Model):
-    name = models.CharField("Nome", max_length=20, unique=True)
+    name = models.CharField("Nome", max_length=50, unique=True)
 
     def __str__(self):
         return self.name

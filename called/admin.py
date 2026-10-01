@@ -1,9 +1,9 @@
 from django.contrib import admin
 
-from .models import SecretarySector, Call, Technician
+from .models import *
 
 # Register your models here.
 
-admin.site.register(SecretarySector)
+admin.site.register(Secretary)
+admin.site.register(Sector)
 admin.site.register(Call)
-admin.site.register(Technician)

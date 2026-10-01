@@ -3,47 +3,75 @@ from django.utils import timezone
 
 from django.conf import settings
 
+from django.contrib.auth.models import User, Group
+
+from core.models import Tecs
 
 # Create your models here.
-class SecretarySector(models.Model):
 
-    name = models.CharField(max_length=100, unique=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+class Secretary(models.Model):
+    
+    secretary_name = models.CharField(
+        max_length=255,
+        verbose_name="Secretaria",
+    )
 
     def __str__(self):
-        return self.name
+        return self.secretary_name
 
+
+class Sector(models.Model):
+    
+    sector_name = models.CharField(
+        max_length=255,
+        verbose_name="Setor"
+    )
+
+    secretary = models.ForeignKey(
+        Secretary,
+        on_delete=models.CASCADE,
+        related_name="setores",
+        verbose_name="Seceretaria do setor"
+    )
+    
+    def __str__(self):
+        return f"{self.sector_name} - {self.secretary}"
 
 class Call(models.Model):
 
     STATUS_CALLED = [
-        ("OPN", "abertos"),
-        ("IMP", "emAndamento"),
-        ("CLS", "encerrados"),
+        ("OPN", "Aberto"),
+        ("IMP", "Em andamento"),
+        ("CLS", "Encerrado"),
+    ]
+    
+    PRIORITY = [
+        (0, "Prioridade Alta"),
+        (1, "Prioridade Média"),
+        (2, "Prioridade Baixa"),
     ]
 
-    secretary_sector = models.ForeignKey(SecretarySector, on_delete=models.CASCADE)
+    sector = models.ForeignKey(
+        Sector, 
+        on_delete=models.CASCADE,
+        verbose_name="Setor"
+    )
     problem = models.TextField("Problema", max_length=250)
-    requester = models.CharField("Requisitante", max_length=100)
+    requester = models.CharField("Requisitante", max_length=250)
     status = models.CharField(
-        "Status do Chamado", max_length=3, choices=STATUS_CALLED, default="OPN"
+        "Status do Chamado",max_length=3, choices=STATUS_CALLED, default="OPN",
+    )
+    priority = models.IntegerField(
+        "Prioridade do chamado",choices=PRIORITY, default=1
     )
     date_start = models.DateField(default=timezone.now)
-    technician = models.ManyToManyField(
-        "Technician",
-        null=True,
+    tecs = models.ManyToManyField(
+        "core.Tecs",
+        related_name="chamados",
         blank=True,
-        related_name="calls",
     )
     date_end = models.DateField(default=None, blank=True, null=True)
     solution = models.TextField("Solução", max_length=250, null=True, blank=True)
 
     def __str__(self):
-        return SecretarySector.objects.get(pk=self.secretary_sector.id).name
-
-
-class Technician(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"{self.user.first_name} {self.user.last_name}"
+        return f"Chamado {self.pk} - {self.sector}"

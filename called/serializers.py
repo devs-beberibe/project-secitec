@@ -1,7 +1,9 @@
 from rest_framework import serializers
 
 from .models import *
-from core.models import Tecs
+from core.models import Tecs, User_sec
+
+
 
 class SecretarySerializer(serializers.ModelSerializer):
     class Meta:

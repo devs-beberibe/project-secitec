@@ -10,6 +10,9 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from .serializers import *
 
+
+
+
 def set_access_cookie(response, access_token):
     response.set_cookie(
         key=settings.JWT_ACCESS_COOKIE,
@@ -32,6 +35,9 @@ def set_refresh_cookie(response, refresh_token):
         samesite=settings.JWT_COOKIE_SAMESITE,
         path="/",
     )
+    
+    
+
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
@@ -193,3 +199,6 @@ class UsuarioView(APIView):
     def get(self, request):
         serializer = UsuarioSerializer(request.user)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    
+    

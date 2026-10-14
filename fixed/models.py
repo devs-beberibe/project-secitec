@@ -11,7 +11,7 @@ class MaintenanceSheet(models.Model):
     receipt_date = models.DateField("Data do recebimento", default=timezone.now)
     serial_number = models.CharField("Número do tombo/série", max_length=30, null=True, blank=True )
     #Quem recebeu o computador
-    receipt = models.ForeignKey("core.User_sec", on_delete=models.CASCADE, related_name="Recebido por")
+    receipt = models.ForeignKey("core.User_sec", on_delete=models.CASCADE, related_name="recebido_por", verbose_name="Recebido por")
     #Quem conferiu/Tecnico
     technician = models.ForeignKey(
         "core.Tecs", on_delete=models.CASCADE, related_name="tecnico_responsavel"

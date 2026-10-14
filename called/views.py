@@ -18,30 +18,35 @@ class TecsViewSet(viewsets.ReadOnlyModelViewSet):
 class CallViewSet(
     mixins.ListModelMixin,
     mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
     viewsets.GenericViewSet,
 ):
     queryset = Call.objects.all()
     serializer_class = CallSerializer
-    permission_classes = [AllowAny]
+    
+    def get_permissions(self):
+        if self.action == "abrir":
+            return [AllowAny()]
+
+        return [IsAuthenticated()]
 
     def get_serializer_class(self):
-
         if self.action == "abrir":
             return OpenCallSerializer
 
         if self.action == "fechar_chamado":
             return FinishCallSerializer
 
+        if self.action in ("update", "partial_update"):
+            return UpdatePrioritySerializer
+
         return CallSerializer
 
     def get_queryset(self):
-
         queryset = Call.objects.all()
+
         if self.action == "list":
-            return queryset.filter(
-                status__in=["IMP", "OPN"],
-                date_end__isnull=True,
-            ).order_by(
+            return queryset.order_by(
                 "priority",
                 "date_start",
                 "id",
@@ -73,7 +78,7 @@ class CallViewSet(
             1,
         )
 
-        if sector.secretary_id in [1, 2]:
+        if sector.secretary_id in [5, 7, 10, ]:
             priority = 0
 
         chamado = serializer.save(
@@ -185,3 +190,5 @@ class CallViewSet(
             CallSerializer(chamado).data,
             status=status.HTTP_200_OK,
         )
+
+

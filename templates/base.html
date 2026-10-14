@@ -1,112 +1,114 @@
 {% load static %}
+
+{% url 'login' as login_url %}
+{% url 'accounts:login' as accounts_login_url %}
+{% url 'logout' as logout_url %}
+{% url 'accounts:logout' as accounts_logout_url %}
+{% url 'refresh' as refresh_url %}
+{% url 'accounts:refresh' as accounts_refresh_url %}
+{% url 'usuario' as user_url %}
+{% url 'accounts:usuario' as accounts_user_url %}
+{% url 'login-page' as login_page_url %}
+{% url 'core:login-page' as core_login_page_url %}
+{% url 'home' as home_url %}
+{% url 'core:home' as core_home_url %}
+
 <!DOCTYPE html>
-<html lang="pt-bt">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous" />
-    <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
-    <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/TopoTimbre.ico' %}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    
-    <title>{% block title %}{% endblock title %}</title>
-  </head>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <body>    
-    <header class="d-flex flex-wrap justify-content-between mb-2 border-bottom color-green shadow">
-      <a href="/" class="text-decoration-none">
-        <img id="logo" src="{% static '/img/logo.png' %}" class="mt-2" alt="Logo Secretaria Municipal de Ciência e Tecnologia">
-      </a>
+  <title>{% block title %}SECITEC · Chamados{% endblock %}</title>
 
-      {% if user.is_authenticated %}
-      <nav class="navbar navbar-expand-sm navbar-dark color-green" aria-label="Third navbar example">
-        <div class="container-fluid">
-          
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbars-base" aria-controls="navbars-base" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <span></span>
-          <div class="collapse navbar-collapse" id="navbars-base">
-            <div id="id-user-profile" class="badge text-bg-warning"> 
-                {{ user.username }}
-            </div>
-          </div>
-        </div>
-      </nav>
-      {% else %}
+  <link rel="icon" href="{% static 'img/TopoTimbre.ico' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
 
-      <div id="id-user-profile" class="color-yellow rounded-2 py-1 px-2 my-2 me-3">
-        <a id="login-logout" class="d-flex align-items-center my-1" href="# ">
-          <p class="mb-0 me-2">login</p>
-          <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 448 512">
-          <!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - 
-          https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-          <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 
-          383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 
-          383.8 368.2 304 269.7 304H178.3z"/></svg>
+<body>
+  <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+
+  <header class="header">
+    <a
+      class="brand"
+      href="{{ home_url|default:core_home_url|default:'/' }}"
+    >
+      <img
+        src="{% static 'img/TopoTimbre.ico' %}"
+        alt="Brasão de Beberibe"
+      >
+
+      <span>
+        <strong>SECITEC<span>.</span></strong>
+        <small>Ciência e Tecnologia · Beberibe</small>
+      </span>
+    </a>
+
+    <nav aria-label="Conta">
+      <small id="account-status" role="status">
+        Verificando conta…
+      </small>
+
+      <span id="account-username" class="username" hidden></span>
+
+      {% if login_page_url or core_login_page_url %}
+        <a
+          id="account-login"
+          class="btn primary"
+          href="{{ login_page_url|default:core_login_page_url }}"
+          hidden
+        >
+          Entrar →
         </a>
-      </div>
-
+      {% else %}
+        <button
+          id="account-login"
+          class="btn primary"
+          disabled
+          hidden
+          title="Configure a rota login-page no core/urls.py"
+        >
+          Entrar →
+        </button>
       {% endif %}
-    </header>
-    
-    <main class="container position-relative">
-      {% block content %}{% endblock content%}
-    </main>
 
-    <footer id="id-footer">
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 p-1 py-5 border-top mb-2">
-        <div class="col mb-3 p-4">
-          <a href="https://www.beberibe.ce.gov.br/" class="d-flex align-items-center mb-3 link-dark text-decoration-none">
-            <img id="logo_prefeitura_footer" src="{% static '/img/beberibe_logo.png' %}" alt="Logo Prefeirura Municipal de Beberibe">
-          </a>
-          <p class="text-light">© 2025</p>
-        </div>
+      <button
+        id="account-logout"
+        class="btn outline"
+        type="button"
+        hidden
+      >
+        Sair →
+      </button>
+    </nav>
+  </header>
 
-        <div class="col mb-3">
-          <h5>SECITEC</h5>
-          <p class="flex-column text-footer">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-            Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
-            when an unknown printer took a galley of type and scrambled it to make a type 
-            specimen book. It has survived not only five centuries, but also the leap into 
-            electronic.
-          </p>
-        </div>
+  <!-- URLs das suas APIViews JWT existentes -->
+  <div
+    id="auth-config"
+    hidden
+    data-login-url="{{ login_url|default:accounts_login_url }}"
+    data-logout-url="{{ logout_url|default:accounts_logout_url }}"
+    data-refresh-url="{{ refresh_url|default:accounts_refresh_url }}"
+    data-user-url="{{ user_url|default:accounts_user_url }}"
+    data-home-url="{{ home_url|default:core_home_url|default:'/' }}"
+  >
+    {% csrf_token %}
+  </div>
 
-        <div class="col mb-3">
-          <h5>O que fazemos ?</h5>
-          <p class="flex-column text-footer">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-            Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
-            when an unknown printer took a galley of type and scrambled it to make a type 
-            specimen book. It has survived not only five centuries, but also the leap into 
-            electronic. 
-          </p>
-        </div>
+  <main id="conteudo" class="container">
+    {% block content %}{% endblock %}
+  </main>
 
-        <div class="col mb-3">
-          <h5>Como podemos ajudar!</h5>
-          <p class="flex-column text-footer">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-            Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
-            when an unknown printer took a galley of type and scrambled it to make a type 
-            specimen book. It has survived not only five centuries, but also the leap into 
-            electronic.
-          </p>
-        </div>
-      </div>
+  <footer>
+    <strong>SECITEC</strong>
+    <span>Prefeitura de Beberibe · {% now 'Y' %}</span>
+  </footer>
 
-      <div id="div_logo_secitec" class="container d-flex justify-content-center border-top ">
-        <img id="img_logo_secitec" src="{% static '/img/logo_secitec.png' %}" alt="Logo da Secretaria de Ciência e Tecnologia">
-      </div>
-    </footer>
+  <!-- A ordem é importante -->
+  <script src="{% static 'js/auth.js' %}" defer></script>
+  <script src="{% static 'js/script.js' %}" defer></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js" integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous"></script>
-    <script src="{% static 'js/script.js' %}"></script>
-    {% block script %}{% endblock script %}
-  </body>
+  {% block script %}{% endblock %}
+</body>
 </html>
-

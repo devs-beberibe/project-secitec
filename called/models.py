@@ -56,6 +56,9 @@ class Call(models.Model):
         on_delete=models.CASCADE,
         verbose_name="Setor"
     )
+    
+    description = models.TextField("Descrição", max_length=250)
+    
     problem = models.TextField("Problema", max_length=250)
     requester = models.CharField("Requisitante", max_length=250)
     status = models.CharField(

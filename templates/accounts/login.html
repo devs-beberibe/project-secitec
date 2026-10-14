@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Entrar · SECITEC{% endblock %}
+
+{% block content %}
+<section class="login-page">
+  <div class="login-card">
+    <span class="eyebrow">ÁREA DE ATENDIMENTO</span>
+
+    <h1>Bem-vindo de volta</h1>
+    <p>Entre para acessar o dashboard e gerenciar os chamados.</p>
+
+    <form
+      id="login-form"
+      method="post"
+      data-identity-field="username"
+    >
+      {% csrf_token %}
+
+      <p class="error" role="alert" hidden></p>
+
+      <label for="identity">Usuário</label>
+      <input
+        id="identity"
+        name="identity"
+        type="text"
+        autocomplete="username"
+        required
+        autofocus
+      >
+
+      <label for="password">Senha</label>
+      <input
+        id="password"
+        name="password"
+        type="password"
+        autocomplete="current-password"
+        required
+      >
+
+      <button class="btn primary login-submit" type="submit">
+        Entrar →
+      </button>
+    </form>
+
+    <a
+      class="login-back"
+      href="{{ home_url|default:core_home_url|default:'/' }}"
+    >
+      ← Voltar ao painel
+    </a>
+
+    <noscript>
+      <p class="notice">
+        Ative o JavaScript para entrar na sua conta.
+      </p>
+    </noscript>
+  </div>
+</section>
+{% endblock %}

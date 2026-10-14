@@ -1,19 +1,473 @@
 {% extends 'base.html' %}
-{% load static %}
 
-{% block title %}Home{% endblock title %}
+{% block title %}Central de chamados · SECITEC{% endblock %}
 
 {% block content %}
-<div id="home" class="container px-4 py-5 my-5 text-center home">
-    <!--<img class="d-block mx-auto mb-4" src="{% static '/img/logo_cras_p.svg' %}" alt="SASC " width="72" height="57">
-    -->
-    <h1 class="display-5 fw-bold">Olá, beberibenses!</h1>
-    <h1 class="display-6">Nós somos a SECITEC estamos aqui para te ajudar.</h1>
-    <div class="col-lg-6 mx-auto">
-      <p class="lead mb-4">
-        Para realizar um chamado clique no botão abaixo
+{% url 'chamados-list' as calls_url %}
+{% url 'chamados-abrir' as open_url %}
+
+<div
+  id="dashboard"
+  data-calls-url="{{ calls_url }}"
+  data-open-url="{{ open_url }}"
+  data-history-available="true"
+>
+  <section class="hero">
+    <div>
+      <span class="eyebrow">ATENDIMENTO MUNICIPAL</span>
+
+      <h1>
+        Tecnologia a serviço<br>
+        de <em>Beberibe.</em>
+      </h1>
+
+      <p>
+        Abra uma solicitação de atendimento.<br>
+        Nossa equipe está aqui para ajudar.
       </p>
+
+      <button class="btn primary" id="open-call" type="button">
+        ＋ Abrir chamado
+      </button>
     </div>
-    <a class="btn btn btn-success btn-lg" href="{% url "chamados-abrir" %}" role="button">Chamados</a>
-    
-{% endblock content %}
+
+    <div class="hero-card" aria-hidden="true">
+      <span>✓</span>
+
+      <strong>
+        Conectar.<br>
+        Resolver.<br>
+        Transformar.
+      </strong>
+
+      <small>SECITEC · BEBERIBE</small>
+    </div>
+  </section>
+
+  <p id="auth-notice" class="notice" hidden>
+    Você pode abrir uma solicitação.
+    Entre na sua conta para acessar o dashboard
+    e gerenciar os chamados.
+  </p>
+
+  <div
+    id="notification"
+    class="notice"
+    role="status"
+    aria-live="polite"
+    hidden
+  ></div>
+
+  <!-- Visível somente após a API confirmar o login -->
+  <div id="private-dashboard" hidden>
+    <div class="section-title">
+      <div>
+        <span class="eyebrow">VISÃO GERAL</span>
+        <h2>Painel de chamados</h2>
+      </div>
+
+      <small id="updated" aria-live="polite">
+        Carregando…
+      </small>
+    </div>
+
+    <section class="stats" aria-label="Resumo dos chamados">
+      <div class="stat">
+        <span>Chamados ativos</span>
+        <strong id="count-active">—</strong>
+        <small>Abertos e em andamento</small>
+      </div>
+
+      <div class="stat">
+        <span>Abertos</span>
+        <strong id="count-open">—</strong>
+        <small>Aguardando atendimento</small>
+      </div>
+
+      <div class="stat">
+        <span>Em andamento</span>
+        <strong id="count-progress">—</strong>
+        <small>Em atendimento</small>
+      </div>
+
+      <div class="stat">
+        <span>Finalizados</span>
+        <strong id="count-closed">—</strong>
+        <small id="closed-caption">
+          Histórico não disponível na API atual
+        </small>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="calls-title">
+      <div class="panel-title">
+        <h2 id="calls-title">Chamados</h2>
+
+        <button class="btn outline" id="refresh" type="button">
+          ↻ Atualizar
+        </button>
+      </div>
+
+      <div class="toolbar">
+        <div
+          class="filters"
+          role="group"
+          aria-label="Filtrar por status"
+        >
+          <button
+            type="button"
+            data-status="ATIVOS"
+            class="active"
+            aria-pressed="true"
+          >
+            Ativos
+          </button>
+
+          <button
+            type="button"
+            data-status="OPN"
+            aria-pressed="false"
+          >
+            Abertos
+          </button>
+
+          <button
+            type="button"
+            data-status="IMP"
+            aria-pressed="false"
+          >
+            Em andamento
+          </button>
+
+          <button
+            type="button"
+            data-status="CLS"
+            aria-pressed="false"
+            id="closed-filter"
+            disabled
+            title="A API atual não lista chamados finalizados"
+          >
+            Finalizados
+          </button>
+        </div>
+
+        <label class="search">
+          <span class="sr-only">Buscar chamados</span>
+
+          <input
+            id="search"
+            type="search"
+            placeholder="Buscar chamado, descrição, solicitante ou setor…"
+          >
+        </label>
+      </div>
+
+      <div id="list" aria-busy="true">
+        <table>
+          <caption class="sr-only">Lista de chamados</caption>
+
+          <thead>
+            <tr>
+              <th>Chamado / solicitante</th>
+              <th>Setor</th>
+              <th>Status</th>
+              <th>Prioridade</th>
+              <th>Abertura</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+
+          <tbody id="calls-body"></tbody>
+        </table>
+      </div>
+
+      <p id="list-message" class="empty" role="status">
+        Carregando chamados…
+      </p>
+
+      <div class="pagination">
+        <span id="page-label"></span>
+
+        <div>
+          <button
+            class="btn outline"
+            id="previous"
+            type="button"
+            disabled
+          >
+            ← Anterior
+          </button>
+
+          <button
+            class="btn outline"
+            id="next"
+            type="button"
+            disabled
+          >
+            Próxima →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <p class="workflow">
+      Aberto → Em andamento → Finalizado
+    </p>
+  </div>
+
+  <!-- Abrir chamado -->
+  <dialog id="open-dialog" aria-labelledby="open-title">
+    <form id="open-form" method="post">
+      {% csrf_token %}
+
+      <div class="dialog-title">
+        <h2 id="open-title">Abrir chamado</h2>
+
+        <button
+          class="close"
+          type="button"
+          data-close
+          aria-label="Fechar"
+        >×</button>
+      </div>
+
+      <p class="intro">
+        Conte o que aconteceu para que nossa equipe possa ajudar.
+      </p>
+
+      <p class="error" role="alert" hidden></p>
+
+      <label for="requester">Solicitante</label>
+      <input
+        id="requester"
+        name="requester"
+        autocomplete="name"
+        maxlength="250"
+        required
+      >
+
+      <label for="secretary">Secretaria</label>
+      <select id="secretary" name="secretary" required>
+        <option value="">Selecione a secretaria</option>
+
+        {% for secretaria in secretarias %}
+          <option value="{{ secretaria.pk }}">
+            {{ secretaria.secretary_name }}
+          </option>
+        {% endfor %}
+      </select>
+
+      <label for="sector">Setor</label>
+      <select
+        id="sector"
+        name="sector"
+        required
+        disabled
+        aria-describedby="sector-help"
+      >
+        <option value="">Selecione primeiro a secretaria</option>
+      </select>
+
+      <!-- Dados usados para filtrar os setores no navegador -->
+      <template id="sector-options">
+        {% for setor in setores %}
+          <option
+            value="{{ setor.pk }}"
+            data-secretary-id="{{ setor.secretary_id }}"
+            data-secretary-name="{{ setor.secretary.secretary_name }}"
+          >
+            {{ setor.sector_name }}
+          </option>
+        {% endfor %}
+      </template>
+
+      <small id="sector-help"></small>
+
+      <label for="problem">Problema</label>
+      <textarea
+        id="problem"
+        name="problem"
+        maxlength="250"
+        rows="3"
+        required
+      ></textarea>
+
+      <label for="description">Descrição</label>
+      <textarea
+        id="description"
+        name="description"
+        maxlength="1000"
+        rows="4"
+        placeholder="Detalhe o problema ou acrescente informações complementares."
+      ></textarea>
+
+      <div class="dialog-actions">
+        <button class="btn outline" type="button" data-close>
+          Cancelar
+        </button>
+
+        <button class="btn primary" type="submit">
+          Abrir chamado
+        </button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Alterar prioridade -->
+  <dialog id="priority-dialog" aria-labelledby="priority-title">
+    <form id="priority-form" method="post">
+      <div class="dialog-title">
+        <h2 id="priority-title">Editar prioridade</h2>
+
+        <button
+          class="close"
+          type="button"
+          data-close
+          aria-label="Fechar"
+        >×</button>
+      </div>
+
+      <p class="intro" id="priority-number"></p>
+      <p class="error" role="alert" hidden></p>
+
+      <label for="new-priority">Prioridade do chamado</label>
+      <select id="new-priority" name="priority" required>
+        <option value="0">Alta</option>
+        <option value="1">Média</option>
+        <option value="2">Baixa</option>
+      </select>
+
+      <div class="dialog-actions">
+        <button class="btn outline" type="button" data-close>
+          Cancelar
+        </button>
+
+        <button class="btn primary" type="submit">
+          Salvar prioridade
+        </button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Realizar chamado -->
+  <dialog id="start-dialog" aria-labelledby="start-title">
+    <form id="start-form" method="post">
+      <div class="dialog-title">
+        <h2 id="start-title">Realizar chamado</h2>
+
+        <button
+          class="close"
+          type="button"
+          data-close
+          aria-label="Fechar"
+        >×</button>
+      </div>
+
+      <p class="intro">
+        Iniciar o atendimento do
+        <strong id="start-number"></strong>?
+        O status será alterado para Em andamento.
+      </p>
+
+      <p class="error" role="alert" hidden></p>
+
+      <div class="dialog-actions">
+        <button class="btn outline" type="button" data-close>
+          Cancelar
+        </button>
+
+        <button class="btn primary" type="submit">
+          Realizar chamado
+        </button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Finalizar chamado -->
+  <dialog id="finish-dialog" aria-labelledby="finish-title">
+    <form id="finish-form" method="post">
+      <div class="dialog-title">
+        <h2 id="finish-title">Finalizar chamado</h2>
+
+        <button
+          class="close"
+          type="button"
+          data-close
+          aria-label="Fechar"
+        >×</button>
+      </div>
+
+      <p class="intro" id="finish-number"></p>
+      <p class="error" role="alert" hidden></p>
+
+      <label for="solution">Solução</label>
+      <textarea
+        id="solution"
+        name="solution"
+        maxlength="250"
+        rows="4"
+        required
+      ></textarea>
+
+      {% if tecnicos %}
+      <fieldset class="technicians">
+          <legend>Técnicos que participaram</legend>
+
+          <p>Marque todos os técnicos que foram no chamado.</p>
+
+          {% for tecnico in tecnicos %}
+            <label class="technician-option">
+              <input
+                type="checkbox"
+                name="tecs"
+                value="{{ tecnico.pk }}"
+            >
+            <span>{{ tecnico }}</span>
+          </label>
+        {% empty %}
+          <p>Nenhum técnico disponível.</p>
+        {% endfor %}
+      </fieldset>
+      {% endif %}
+
+      <div class="dialog-actions">
+        <button class="btn outline" type="button" data-close>
+          Cancelar
+        </button>
+
+        <button class="btn primary" type="submit">
+          Finalizar chamado
+        </button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Detalhes -->
+  <dialog id="detail-dialog" aria-labelledby="detail-title">
+    <div class="dialog-title">
+      <h2 id="detail-title">Detalhes do chamado</h2>
+
+      <button
+        class="close"
+        type="button"
+        data-close
+        aria-label="Fechar"
+      >×</button>
+    </div>
+
+    <dl id="details"></dl>
+
+    <div class="dialog-actions">
+      <button class="btn outline" type="button" data-close>
+        Fechar
+      </button>
+    </div>
+  </dialog>
+</div>
+
+<noscript>
+  <p class="notice">
+    Ative o JavaScript para abrir e gerenciar os chamados.
+  </p>
+</noscript>
+{% endblock %}

@@ -14,7 +14,6 @@ class SectorSerializer(serializers.ModelSerializer):
     secretary = SecretarySerializer(
         read_only=True,
     )
-    
     class Meta:
         model = Sector
         fields = "__all__"
@@ -68,6 +67,34 @@ class FinishCallSerializer(serializers.ModelSerializer):
         )
         
 class CallSerializer(serializers.ModelSerializer):
+    
+    sector_name = serializers.CharField(
+        source="sector.sector_name",
+        read_only=True,
+    )
+    
     class Meta:
         model = Call
         fields = "__all__"
+        
+class UpdatePrioritySerializer(serializers.ModelSerializer):
+    priority = serializers.ChoiceField(
+        choices=Call.PRIORITY,
+        required=True,
+    )
+
+    class Meta:
+        model = Call
+        fields = ("priority",)
+
+    def validate(self, attrs):
+        if "priority" not in attrs:
+            raise serializers.ValidationError({
+                "priority": "Informe a nova prioridade."
+            })
+        return attrs
+
+    def update(self, instance, validated_data):
+        instance.priority = validated_data["priority"]
+        instance.save(update_fields=["priority"])
+        return instance

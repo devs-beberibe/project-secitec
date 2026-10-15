@@ -48,8 +48,8 @@ class CallViewSet(
         if self.action == "list":
             return queryset.order_by(
                 "priority",
-                "date_start",
-                "id",
+                "-date_start",
+                "-id",
             )
 
         return queryset

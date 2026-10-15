@@ -666,14 +666,15 @@
         ...new Map(
           loaded.map(call => [String(call.id), call])
         ).values(),
-      ].sort(
-        (a, b) =>
-          Number(a.priority) - Number(b.priority) ||
-          String(a.date_start).localeCompare(
-            String(b.date_start)
-          ) ||
-          Number(a.id) - Number(b.id)
-      );
+      ].sort((a, b) => {
+    return (
+      Number(a.priority) - Number(b.priority) ||
+      String(b.date_start || "").localeCompare(
+      String(a.date_start || "")
+    ) ||
+    Number(b.id) - Number(a.id)
+  );
+});
 
       counters();
       render();

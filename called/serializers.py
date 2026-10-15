@@ -19,9 +19,17 @@ class SectorSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class TechnicianSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+
     class Meta:
         model = Tecs
-        fields = "__all__"
+        fields = ["id", "user", "name"]
+
+    def get_name(self, obj):
+        return (
+            obj.user.get_full_name().strip()
+            or obj.user.get_username()
+        )
     
 class OpenCallSerializer(serializers.ModelSerializer):
     
@@ -70,6 +78,11 @@ class CallSerializer(serializers.ModelSerializer):
     
     sector_name = serializers.CharField(
         source="sector.sector_name",
+        read_only=True,
+    )
+    
+    tecs = TechnicianSerializer(
+        many=True,
         read_only=True,
     )
     

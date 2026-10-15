@@ -310,15 +310,14 @@
       ["Abertura", date(call.date_start)],
       ["Conclusão", date(call.date_end)],
       ["Solução", call.solution || "Não registrada"],
+      [
+  "Técnicos",
+  (call.tecs || [])
+    .map(tecnico => tecnico.name)
+    .filter(Boolean)
+    .join(", ") || "Nenhum técnico informado",
+],
     ];
-
-    if (Array.isArray(call.technician_names)) {
-      values.push([
-        "Técnicos",
-        call.technician_names.join(", ") || "Não informados",
-      ]);
-    }
-
     values.forEach(([label, value]) => {
       details.append(
         element("dt", "", label),
@@ -888,6 +887,7 @@
     const form = event.currentTarget;
     const data = new FormData(form);
     const solution = data.get("solution").trim();
+    const tecs = data;getAll("tecs").map(Number);
 
     if (!solution) {
       return formError(
@@ -896,11 +896,12 @@
       );
     }
 
-    const payload = { solution };
-
-    if (form.querySelector('[name="tecs"]')) {
-      payload.tecs = data.getAll("tecs").map(Number);
-    }
+   if (!tecs) {
+    return formError(
+      form,
+      "Atribua um tecnico ao chamado"
+    )
+   }
 
     save(
       form,

@@ -880,37 +880,49 @@
     }
   });
 
-  $("#finish-form").addEventListener("submit", event => {
-    event.preventDefault();
+$("#finish-form").addEventListener("submit", event => {
+  event.preventDefault();
 
-    if (!selected) return;
+  if (!selected) {
+    return formError(
+      event.currentTarget,
+      "Não foi possível identificar o chamado. Feche e abra a janela novamente."
+    );
+  }
 
-    const form = event.currentTarget;
-    const data = new FormData(form);
-    const solution = data.get("solution").trim();
-    const tecs = data;getAll("tecs").map(Number);
 
-    if (!solution) {
-      return formError(
-        form,
-        "Descreva a solução antes de finalizar."
-      );
-    }
+  const form = event.currentTarget;
+  const data = new FormData(form);
 
-   if (!tecs) {
+  const solution = String(data.get("solution") || "").trim();
+  const tecs = data.getAll("tecs").map(Number);
+
+  if (!solution) {
     return formError(
       form,
-      "Atribua um tecnico ao chamado"
-    )
-   }
-
-    save(
-      form,
-      actionUrl("fechar-chamado"),
-      payload,
-      `Chamado #${selected.id} finalizado com sucesso.`
+      "Descreva a solução antes de finalizar."
     );
-  });
+  }
+
+  if (tecs.length === 0) {
+    return formError(
+      form,
+      "Selecione pelo menos um técnico."
+    );
+  }
+
+  const payload = {
+    solution,
+    tecs,
+  };
+
+  save(
+    form,
+    actionUrl("fechar-chamado"),
+    payload,
+    `Chamado #${selected.id} finalizado com sucesso.`
+  );
+});
 
   $("#priority-form").addEventListener("submit", event => {
     event.preventDefault();

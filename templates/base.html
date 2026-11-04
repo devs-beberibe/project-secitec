@@ -105,10 +105,10 @@
     <span>Prefeitura de Beberibe · {% now 'Y' %}</span>
   </footer>
 
-  <!-- A ordem é importante -->
-  <script src="{% static 'js/auth.js' %}" defer></script>
-  <script src="{% static 'js/script.js' %}" defer></script>
+<!-- A ordem é importante -->
+<script src="{% static 'js/auth.js' %}" defer></script>
+<script src="{% static 'js/script.js' %}?v=3" defer></script>
 
-  {% block script %}{% endblock %}
+{% block script %}{% endblock %}
 </body>
 </html>

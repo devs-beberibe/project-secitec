@@ -982,8 +982,8 @@ dd {
 /* Cores dos status e dos respectivos filtros. */
 .badge.OPN,
 .filters button[data-status="OPN"] {
-  background: #eaf3ff;
-  color: #3d6f98;
+  background: #ffeaea;
+  color: #983d3d;
 }
 .badge.IMP,
 .filters button[data-status="IMP"] {

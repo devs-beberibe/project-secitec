@@ -8,11 +8,12 @@
 
 <div
   id="dashboard"
+  data-page="{% if dashboard_page %}dashboard{% else %}home{% endif %}"
   data-calls-url="{{ calls_url }}"
   data-open-url="{{ open_url }}"
   data-history-available="true"
 >
-  <section class="hero">
+  <section class="hero" id="home-view" {% if dashboard_page %}hidden{% endif %}>
     <div>
       <span class="eyebrow">ATENDIMENTO MUNICIPAL</span>
 
@@ -52,7 +53,7 @@
 
   <div
     id="notification"
-    class="notice"
+    class="toast-notification"
     role="status"
     aria-live="polite"
     hidden
@@ -103,9 +104,14 @@
       <div class="panel-title">
         <h2 id="calls-title">Chamados</h2>
 
-        <button class="btn outline" id="refresh" type="button">
-          ↻ Atualizar
-        </button>
+        <div class="panel-actions">
+          <button class="btn primary" id="open-call-dashboard" type="button">
+            ＋ Abrir chamado
+          </button>
+          <button class="btn outline" id="refresh" type="button">
+            ↻ Atualizar
+          </button>
+        </div>
       </div>
 
       <div class="toolbar">
@@ -399,6 +405,16 @@
 
       <p class="intro" id="finish-number"></p>
       <p class="error" role="alert" hidden></p>
+
+      <label for="date-end">Data de finalização</label>
+      <input
+        id="date-end"
+        name="date_end"
+        type="date"
+        required
+        aria-describedby="date-end-help"
+      >
+      <small id="date-end-help">Selecione hoje ou uma data futura.</small>
 
       <label for="solution">Solução</label>
       <textarea

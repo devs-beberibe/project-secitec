@@ -13,6 +13,9 @@
 {% url 'home' as home_url %}
 {% url 'core:home' as core_home_url %}
 
+{% url 'dashboard' as dashboard_url %}
+{% url 'core:dashboard' as core_dashboard_url %}
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -22,7 +25,7 @@
   <title>{% block title %}SECITEC · Chamados{% endblock %}</title>
 
   <link rel="icon" href="{% static 'img/TopoTimbre.ico' %}">
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=20261110-layout">
 </head>
 
 <body>
@@ -48,6 +51,10 @@
       <small id="account-status" role="status">
         Verificando conta…
       </small>
+
+      <a id="account-calls" class="btn outline" href="{{ dashboard_url|default:core_dashboard_url|default:'/chamados/dashboard/' }}" hidden>
+        Chamados
+      </a>
 
       <span id="account-username" class="username" hidden></span>
 
@@ -106,8 +113,8 @@
   </footer>
 
 <!-- A ordem é importante -->
-<script src="{% static 'js/auth.js' %}" defer></script>
-<script src="{% static 'js/script.js' %}?v=3" defer></script>
+<script src="{% static 'js/auth.js' %}?v=20261110-layout" defer></script>
+<script src="{% static 'js/script.js' %}?v=20261110-layout" defer></script>
 
 {% block script %}{% endblock %}
 </body>

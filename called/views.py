@@ -137,58 +137,56 @@ class CallViewSet(
 
 
     @action(
-        detail=True,
-        methods=["post"],
-        url_path="fechar-chamado",
-    )
-    def fechar_chamado(
-        self,
-        request,
-        pk=None,
-    ):
+    detail=True,
+    methods=["post"],
+    url_path="fechar-chamado",
+)
+    def fechar_chamado(self, request, pk=None):
 
         chamado = self.get_object()
 
         if chamado.status == "CLS":
             return Response(
-                {
-                    "detail": (
-                        "Este chamado já foi encerrado."
-                    )
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+            {"detail": "Este chamado já foi encerrado."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
         if chamado.status != "IMP":
             return Response(
-                {
-                    "detail": (
-                        "O chamado precisa estar "
-                        "em andamento antes de ser "
-                        "encerrado."
-                    )
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+            {
+                "detail": (
+                    "O chamado precisa estar em andamento "
+                    "antes de ser encerrado."
+                )
+            },
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
         serializer = self.get_serializer(
             chamado,
             data=request.data,
             partial=True,
-        )
+    )
 
-        serializer.is_valid(
-            raise_exception=True,
+        serializer.is_valid(raise_exception=True)
+
+    
+        date_end = serializer.validated_data.get("date_end")
+
+        if date_end is None:
+            return Response(
+            {"detail": "Informe a data de encerramento."},
+            status=status.HTTP_400_BAD_REQUEST,
         )
 
         chamado = serializer.save(
-            status="CLS",
-            date_end=timezone.localdate(),
-        )
+        status="CLS",
+        date_end=date_end,
+    )
 
         return Response(
-            CallSerializer(chamado).data,
-            status=status.HTTP_200_OK,
-        )
+        CallSerializer(chamado).data,
+        status=status.HTTP_200_OK,
+    )
 
 

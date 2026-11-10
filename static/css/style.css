@@ -979,3 +979,120 @@ dd {
     max-width: 130px;
   }
 }
+/* Cores dos status e dos respectivos filtros. */
+.badge.OPN,
+.filters button[data-status="OPN"] {
+  background: #eaf3ff;
+  color: #3d6f98;
+}
+.badge.IMP,
+.filters button[data-status="IMP"] {
+  background: #fff4d7;
+  color: #927017;
+}
+.filters button[data-status="CLS"] {
+  background: #e4f5ec;
+  color: #267b4c;
+}
+.filters button[data-status="ATIVOS"] {
+  background: #e6f4ef;
+  color: #006c4c;
+}
+.filters button.active {
+  outline: 2px solid currentColor;
+  outline-offset: -2px;
+  font-weight: 700;
+}
+.filters button:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* Prioridades: apenas a cor do texto. */
+.priority {
+  display: inline-block;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  font-weight: 700;
+}
+.priority.high { color: #c62828; }
+.priority.medium { color: #ffda44; }
+.priority.low { color: #1565c0; }
+
+#date-end { width: 100%; color-scheme: light; }
+#date-end-help { display: block; margin: 6px 0 18px; color: var(--muted); }
+
+/* Aviso temporário, fora do fluxo do dashboard. */
+.toast-notification {
+  position: fixed;
+  left: 50%;
+  bottom: max(24px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 1000;
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  box-sizing: border-box;
+  padding: 18px 24px;
+  border: 1px solid #348e68;
+  border-left: 5px solid #4ade80;
+  border-radius: 12px;
+  background: #143e30;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 12px 36px #102c3433;
+  animation: toast-enter 180ms ease-out;
+}
+.toast-notification::before { content: "✓"; margin-right: 12px; color: #86efac; }
+.toast-notification.error { background: #7f1d1d; border-color: #ef4444; }
+.toast-notification.error::before { content: "!"; color: #fff; }
+@keyframes toast-enter {
+  from { opacity: 0; transform: translate(-50%, 12px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .toast-notification { animation: none; }
+}
+
+/* Barra discreta na borda esquerda de cada chamado. */
+.call-priority-marker { position: relative; }
+.call-priority-marker[data-priority="0"] { --call-priority-color: #c62828; }
+.call-priority-marker[data-priority="1"] { --call-priority-color: #ffda44; }
+.call-priority-marker[data-priority="2"] { --call-priority-color: #1565c0; }
+.call-priority-marker::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  border-radius: 0;
+  background: var(--call-priority-color, transparent);
+  pointer-events: none;
+}
+
+/* Prioridades no tamanho original, sem contorno ou sombra. */
+.priority.high,
+.priority.medium,
+.priority.low {
+  font-size: 11px;
+  font-weight: 700;
+  -webkit-text-stroke: 0;
+  text-shadow: none;
+}
+.priority.medium { color: #927000; }
+
+/* Cabeçalho mais amplo, preservando as cores e componentes existentes. */
+.header {
+  padding-left: clamp(20px, 4vw, 80px);
+  padding-right: clamp(20px, 4vw, 80px);
+}
+.panel-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+#account-calls[aria-current="page"] { border-color: var(--green); color: var(--green); }
+@media (max-width: 700px) {
+  .header { flex-wrap: wrap; }
+  .header nav { flex-wrap: wrap; justify-content: flex-end; }
+  .panel-title { flex-wrap: wrap; gap: 12px; }
+  .panel-actions { gap: 8px; }
+}

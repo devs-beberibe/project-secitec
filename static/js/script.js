@@ -8,6 +8,7 @@
   const auth = window.SECITECAuth;
 
   let authenticated = false;
+  let dashboardVisible = false;
 
   const historyAvailable =
     root.dataset.historyAvailable === "true";
@@ -232,12 +233,29 @@
     }
   }
 
+  let noticeTimer;
+
+  // Local calendar date: avoids a different day caused by conversion to UTC.
+  function todayISO() {
+    const now = new Date();
+    return [
+      now.getFullYear(),
+      String(now.getMonth() + 1).padStart(2, "0"),
+      String(now.getDate()).padStart(2, "0"),
+    ].join("-");
+  }
+
   function notice(message, error = false) {
     const target = $("#notification");
 
     target.textContent = message;
     target.hidden = false;
     target.classList.toggle("error", error);
+    clearTimeout(noticeTimer);
+    noticeTimer = setTimeout(() => {
+      target.hidden = true;
+      target.textContent = "";
+    }, 5500);
   }
 
   function formError(form, message = "") {
@@ -359,6 +377,9 @@
 
       if (finish) {
         $("#finish-form").reset();
+        const dateInput = $("#date-end");
+        dateInput.min = todayISO();
+        dateInput.value = todayISO();
 
         $("#finish-number").textContent =
           `Registre a solução do chamado #${call.id}.`;
@@ -455,7 +476,8 @@
 
     rows.forEach(call => {
       const row = element("tr");
-      const main = element("td");
+      const main = element("td", "call-priority-marker");
+      main.dataset.priority = String(call.priority);
       const link = element("button", "call-link");
 
       link.type = "button";
@@ -507,7 +529,7 @@
       priority.append(
         element(
           "span",
-          `priority${Number(call.priority) === 0 ? " high" : ""}`,
+          `priority ${({0: "high", 1: "medium", 2: "low"})[Number(call.priority)] || ""}`,
           priorityNames[call.priority] || "—"
         )
       );
@@ -592,7 +614,7 @@
   }
 
   async function load() {
-    if (!authenticated) return;
+    if (!authenticated || !dashboardVisible) return;
 
     loadController?.abort();
 
@@ -745,7 +767,7 @@
     render();
   });
 
-  $("#open-call").addEventListener("click", () => {
+  function openCall() {
     const form = $("#open-form");
 
     form.reset();
@@ -765,7 +787,10 @@
         "Configure a rota chamados-abrir no home.html."
       );
     }
-  });
+  }
+
+  $("#open-call").addEventListener("click", openCall);
+  $("#open-call-dashboard").addEventListener("click", openCall);
 
   const actionUrl = suffix =>
     `${root.dataset.callsUrl}` +
@@ -806,7 +831,7 @@
 
       state.page = 1;
 
-      if (authenticated) await load();
+      if (authenticated && dashboardVisible) await load();
     } catch (error) {
       formError(
         form,
@@ -896,6 +921,13 @@ $("#finish-form").addEventListener("submit", event => {
 
   const solution = String(data.get("solution") || "").trim();
   const tecs = data.getAll("tecs").map(Number);
+  const dateEnd = String(data.get("date_end") || "");
+  const dateInput = form.querySelector('[name="date_end"]');
+  dateInput.min = todayISO();
+
+  if (!dateEnd || !dateInput.checkValidity() || dateEnd < todayISO()) {
+    return formError(form, "Selecione hoje ou uma data futura para finalizar.");
+  }
 
   if (!solution) {
     return formError(
@@ -914,13 +946,14 @@ $("#finish-form").addEventListener("submit", event => {
   const payload = {
     solution,
     tecs,
+    date_end: dateEnd,
   };
 
   save(
     form,
     actionUrl("fechar-chamado"),
     payload,
-    `Chamado #${selected.id} finalizado com sucesso.`
+    `Chamado #${selected.id} fechado com sucesso.`
   );
 });
 
@@ -950,11 +983,7 @@ $("#finish-form").addEventListener("submit", event => {
   });
 
   function applyUser(user) {
-    const wasAuthenticated = authenticated;
-
     authenticated = Boolean(user);
-    privateDashboard.hidden = !authenticated;
-
     if (!authenticated) {
       loadController?.abort();
 
@@ -975,14 +1004,28 @@ $("#finish-form").addEventListener("submit", event => {
           if (dialog.open) dialog.close();
         });
 
-    } else if (!wasAuthenticated) {
-      load();
-
-    } else if (
-      $("#list").getAttribute("aria-busy") !== "true"
-    ) {
-      render();
     }
+
+    updateView();
+  }
+
+  function updateView() {
+    const wasVisible = dashboardVisible;
+    dashboardVisible = authenticated && root.dataset.page === "dashboard";
+    privateDashboard.hidden = !dashboardVisible;
+    $("#home-view").hidden = root.dataset.page === "dashboard";
+    const link = $("#account-calls");
+    if (link) {
+      if (dashboardVisible) link.setAttribute("aria-current", "page");
+      else link.removeAttribute("aria-current");
+    }
+    if (!authenticated && root.dataset.page === "dashboard") {
+      const homeUrl = $("#auth-config")?.dataset.homeUrl || "/";
+      location.replace(homeUrl);
+      return;
+    }
+    if (dashboardVisible && !wasVisible) load();
+    if (!dashboardVisible) loadController?.abort();
   }
 
   auth?.subscribe(applyUser);

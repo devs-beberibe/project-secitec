@@ -9,4 +9,6 @@ urlpatterns = [
     path("api/v1/called/", include("called.urls")),
     path("api/v1/accounts/", include("accounts.urls")),
     path("entrar/", views.login_page, name="login-page"),
+    path("chamados/dashboard/", views.home, {"dashboard_page": True}, name="dashboard",
+),
 ]

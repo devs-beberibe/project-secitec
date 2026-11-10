@@ -4,7 +4,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from called.models import Secretary, Sector
 from core.models import Tecs
 from accounts.authentication import CookieJWTAuthentication
-def home(request):
+def home(request, dashboard_page=False):
     try:
         authentication = CookieJWTAuthentication().authenticate(
             request
@@ -15,6 +15,7 @@ def home(request):
     return render(
         request,
         "core/home.html",
+        
         {
             "secretarias": (
                 Secretary.objects.order_by("secretary_name")
@@ -29,6 +30,7 @@ def home(request):
                 if authentication
                 else []
             ),
+            "dashboard_page": dashboard_page,
         },
     )
 

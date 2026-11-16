@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Central de chamados · SECITEC{% endblock %}
 
@@ -43,6 +44,39 @@
 
       <small>SECITEC · BEBERIBE</small>
     </div>
+  </section>
+
+  <section class="tracking-card" id="maintenance-tracking" {% if dashboard_page %}hidden{% endif %}>
+    <div>
+      <span class="eyebrow">ACOMPANHAR MANUTENÇÃO</span>
+      <h2>Consulte sua ficha</h2>
+      <p>Busque pelo número da ficha, tombamento ou setor.</p>
+    </div>
+
+    {% url 'ficha-manutencao-public-search' as tracking_search_url %}
+    <form id="tracking-form" data-search-url="{{ tracking_search_url }}" novalidate>
+      <div class="tracking-search-label">
+        <label for="tracking-query">Pesquisar ficha</label>
+      </div>
+      <div class="tracking-search-input">
+        <input id="tracking-query" name="query" type="search" maxlength="100" placeholder="Número, tombamento ou setor" required>
+      </div>
+      <button class="btn primary" type="submit">Consultar</button>
+      <p class="error" role="alert" hidden></p>
+    </form>
+
+    <div id="tracking-result" class="tracking-result" hidden></div>
+
+    <dialog id="tracking-details-dialog" aria-labelledby="tracking-details-title">
+      <div class="dialog-title">
+        <h2 id="tracking-details-title">Detalhes da ficha</h2>
+        <button class="close" type="button" data-tracking-close aria-label="Fechar">×</button>
+      </div>
+      <div id="tracking-details"></div>
+      <div class="dialog-actions">
+        <button class="btn outline" type="button" data-tracking-close>Fechar</button>
+      </div>
+    </dialog>
   </section>
 
   <p id="auth-notice" class="notice" hidden>
@@ -486,4 +520,8 @@
     Ative o JavaScript para abrir e gerenciar os chamados.
   </p>
 </noscript>
+{% endblock %}
+
+{% block script %}
+  <script src="{% static 'js/maintenance-tracking.js' %}?v=20261113-details2" defer></script>
 {% endblock %}

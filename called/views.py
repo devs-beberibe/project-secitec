@@ -6,6 +6,10 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import action
 from django.utils import timezone
 from rest_framework.response import Response
+from fixed.permissions import (
+    IsAdministrativeOrTechnician,
+    IsTechnician,
+)
 
     
     
@@ -28,7 +32,10 @@ class CallViewSet(
         if self.action == "abrir":
             return [AllowAny()]
 
-        return [IsAuthenticated()]
+        if self.action in ("realizar", "fechar_chamado"):
+            return [IsAuthenticated(), IsTechnician()]
+
+        return [IsAuthenticated(), IsAdministrativeOrTechnician()]
 
     def get_serializer_class(self):
         if self.action == "abrir":

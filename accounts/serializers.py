@@ -7,13 +7,36 @@ from rest_framework import serializers
 
 User = get_user_model()
 
+class UserCapabilitiesMixin(serializers.Serializer):
+    groups = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field="name",
+    )
+    capabilities = serializers.SerializerMethodField()
+
+    def get_capabilities(self, obj):
+        names = set(obj.groups.values_list("name", flat=True))
+        technician = obj.is_superuser or "Tecnico" in names
+        administrative = obj.is_superuser or "Administrativo" in names
+        return {
+            "calls_view": obj.is_authenticated,
+            "calls_manage": obj.is_authenticated,
+            "calls_service": technician,
+            "maintenance_view": obj.is_authenticated,
+            "maintenance_start": obj.is_authenticated,
+            "maintenance_perform": technician,
+            "maintenance_delivery": obj.is_authenticated,
+        }
+        
+        
 class GrupoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Group
         fields = ["id", "name"]
 
-class UsuarioSerializer(serializers.ModelSerializer):
+class UsuarioSerializer(UserCapabilitiesMixin, serializers.ModelSerializer):
     nome = serializers.CharField(
         source="first_name",
         read_only=True,
@@ -36,6 +59,8 @@ class UsuarioSerializer(serializers.ModelSerializer):
             "sobrenome",
             "grupos",
             "username",
+            "groups",
+            "capabilities",
         ]
         read_only_fields = [
             "id",

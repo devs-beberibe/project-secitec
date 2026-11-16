@@ -1,6 +1,12 @@
 from rest_framework import routers
-from rest_framework.routers import DefaultRouter
 
-from .views import *
+from .views import MaintenanceSheetViewSet
 
-router = DefaultRouter()
+
+router = routers.DefaultRouter()
+
+router.register(
+    "ficha-manutencao",
+    MaintenanceSheetViewSet,
+    basename="ficha-manutencao",
+)

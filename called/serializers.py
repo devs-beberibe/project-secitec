@@ -56,6 +56,7 @@ class OpenCallSerializer(serializers.ModelSerializer):
             "status",
             "priority",
             "date_start",
+            "description",
         )
         
 class FinishCallSerializer(serializers.ModelSerializer):

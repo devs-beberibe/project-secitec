@@ -9,6 +9,8 @@
 
   let authenticated = false;
   let dashboardVisible = false;
+  let canServiceCalls = false;
+  let canManageCalls = false;
 
   const historyAvailable =
     root.dataset.historyAvailable === "true";
@@ -357,10 +359,17 @@
 
     button.disabled =
       !authenticated ||
+      !canServiceCalls ||
       call.status !== (finish ? "IMP" : "OPN");
+
+    if (authenticated && !canServiceCalls) {
+      button.setAttribute("aria-disabled", "true");
+    }
 
     button.title = !authenticated
       ? "Entre para atender o chamado"
+      : !canServiceCalls
+        ? "Somente técnicos podem realizar ou finalizar chamados"
       : call.status === "CLS"
         ? "Chamado já finalizado"
         : finish
@@ -369,7 +378,8 @@
 
     button.setAttribute(
       "aria-label",
-      `${finish ? "Finalizar" : "Realizar"} chamado #${call.id}`
+      `${finish ? "Finalizar" : "Realizar"} chamado #${call.id}` +
+      (authenticated && !canServiceCalls ? ", ação exclusiva de técnico" : "")
     );
 
     button.addEventListener("click", () => {
@@ -412,7 +422,7 @@
     button.type = "button";
 
     button.disabled =
-      !authenticated || call.status === "CLS";
+      !authenticated || !canManageCalls || call.status === "CLS";
 
     button.title = "Alterar a prioridade do chamado";
 
@@ -984,6 +994,15 @@ $("#finish-form").addEventListener("submit", event => {
 
   function applyUser(user) {
     authenticated = Boolean(user);
+    const groups = Array.isArray(user?.groups) ? user.groups : [];
+    const technician = groups.includes("Tecnico");
+    const administrative = groups.includes("Administrativo");
+    canServiceCalls = Boolean(
+      user?.capabilities?.calls_service ?? technician
+    );
+    canManageCalls = Boolean(
+      user?.capabilities?.calls_manage ?? (technician || administrative)
+    );
     if (!authenticated) {
       loadController?.abort();
 

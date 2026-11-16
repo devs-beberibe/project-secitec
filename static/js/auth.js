@@ -16,11 +16,20 @@
     const login = document.getElementById("account-login");
     const logout = document.getElementById("account-logout");
     const calls = document.getElementById("account-calls");
+    const maintenance = document.getElementById("account-maintenance");
     const username = document.getElementById("account-username");
     const notice = document.getElementById("auth-notice");
     if (login) login.hidden = signedIn;
     if (logout) logout.hidden = !signedIn;
-    if (calls) calls.hidden = !signedIn;
+    const capabilities = user?.capabilities || {};
+    const groups = Array.isArray(user?.groups) ? user.groups : [];
+    const isTeam = groups.includes("Tecnico") || groups.includes("Administrativo");
+    if (calls) {
+      calls.hidden = !signedIn || !(capabilities.calls_view ?? isTeam);
+    }
+    if (maintenance) {
+      maintenance.hidden = !signedIn || !(capabilities.maintenance_view ?? isTeam);
+    }
     if (username) {
       username.hidden = !signedIn;
       username.textContent = user?.username || user?.nome || user?.name || user?.email || "Usuário autenticado";

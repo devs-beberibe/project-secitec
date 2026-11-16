@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Fichas de manutenção · SECITEC{% endblock %}
+{% block content %}
+{% url 'ficha-manutencao-list' as sheets_url %}
+{% url 'ficha-manutencao-recebimento' as receipt_url %}
+{% url 'ficha-manutencao-components' as components_url %}
+<div id="maintenance-dashboard" data-sheets-url="{{ sheets_url }}" data-receipt-url="{{ receipt_url }}" data-components-url="{{ components_url }}">
+  <div id="maintenance-notification" class="toast-notification" role="status" hidden></div>
+  <div class="section-title maintenance-heading">
+    <div><span class="eyebrow">CONTROLE TÉCNICO</span><h1>Fichas de manutenção</h1><p>Recebimento, manutenção e entrega de equipamentos.</p></div>
+    <div class="panel-actions"><button class="btn primary" id="new-sheet" type="button" hidden>＋ Receber</button><button class="btn outline" id="refresh-sheets" type="button">↻ Atualizar</button></div>
+  </div>
+  <section class="panel" aria-labelledby="sheets-title">
+    <div class="panel-title"><h2 id="sheets-title">Equipamentos</h2><label class="search"><span class="sr-only">Buscar fichas</span><input id="sheet-search" type="search" placeholder="Número, tombo, responsável ou setor…"></label></div>
+    <div class="toolbar maintenance-toolbar"><div class="filters" role="group" aria-label="Filtrar fichas por situação">
+      <button type="button" data-sheet-status="ALL" class="active" aria-pressed="true">Todas</button>
+      <button type="button" data-sheet-status="RCV" aria-pressed="false">Recebidas</button>
+      <button type="button" data-sheet-status="MNT" aria-pressed="false">Manutenção feita</button>
+      <button type="button" data-sheet-status="DLV" aria-pressed="false">Entregues</button>
+    </div></div>
+    <div id="sheets-list" aria-busy="true"><table><thead><tr><th>Ficha / equipamento</th><th>Setor</th><th>Responsável</th><th>Recebimento</th><th>Situação</th><th>Ações</th></tr></thead><tbody id="sheets-body"></tbody></table></div>
+    <p id="sheets-message" class="empty">Carregando fichas…</p>
+  </section>
+  <template id="maintenance-sector-options">{% for setor in setores %}<option value="{{ setor.pk }}" data-secretary-id="{{ setor.secretary_id }}">{{ setor.sector_name }}</option>{% endfor %}</template>
+
+  <dialog id="receipt-dialog" aria-labelledby="receipt-title"><form id="receipt-form" method="post">{% csrf_token %}
+    <div class="dialog-title"><h2 id="receipt-title">Receber equipamento</h2><button class="close" type="button" data-maintenance-close aria-label="Fechar">×</button></div><p class="error" role="alert" hidden></p>
+    <div class="form-grid">
+      <div class="field"><label for="receipt-date">Data do recebimento</label><input id="receipt-date" name="receipt_date" type="date" required></div>
+      <div class="field"><label for="serial-number">Número do tombo/série</label><input id="serial-number" name="serial_number" maxlength="30"></div>
+      <div class="field"><label for="receipt-user">Recebido por</label><select id="receipt-user" name="receipt" required><option value="">Selecione</option>{% for pessoa in usuarios_sec %}<option value="{{ pessoa.pk }}">{{ pessoa }}</option>{% endfor %}</select></div>
+      <div class="field"><label for="maintenance-secretary">Secretaria</label><select id="maintenance-secretary" required><option value="">Selecione</option>{% for secretaria in secretarias %}<option value="{{ secretaria.pk }}">{{ secretaria.secretary_name }}</option>{% endfor %}</select></div>
+      <div class="field"><label for="maintenance-sector">Setor</label><select id="maintenance-sector" name="secretary_sector" required disabled><option value="">Selecione a secretaria</option></select></div>
+      <div class="field"><label for="pc-responsible">Responsável pelo equipamento</label><input id="pc-responsible" name="pc_responsible" maxlength="50" required></div>
+      <div class="field"><label for="maintenance-contact">Contato</label><input id="maintenance-contact" name="contact" maxlength="50" required></div>
+    </div>
+    <div class="field"><label for="problem-description">Descrição do problema</label><textarea id="problem-description" name="problem_description" maxlength="200" rows="4" required></textarea></div>
+    <div class="dialog-actions"><button class="btn outline" type="button" data-maintenance-close>Cancelar</button><button class="btn primary" type="submit">Receber</button></div>
+  </form></dialog>
+
+  <dialog id="maintenance-dialog" aria-labelledby="perform-maintenance-title"><form id="maintenance-form" method="post">
+    <div class="dialog-title"><h2 id="perform-maintenance-title">Realizar manutenção</h2><button class="close" type="button" data-maintenance-close aria-label="Fechar">×</button></div><p id="maintenance-number" class="intro"></p><p class="error" role="alert" hidden></p>
+    <div class="field"><label for="maintenance-technician">Técnico responsável</label><select id="maintenance-technician" name="technician" required><option value="">Selecione</option>{% for tecnico in tecnicos %}<option value="{{ tecnico.pk }}">{{ tecnico }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="maintenance-observation">Observações</label><textarea id="maintenance-observation" name="observation" maxlength="300" rows="3"></textarea></div>
+    <div class="field"><label for="realized-service">Serviço realizado</label><textarea id="realized-service" name="realized_service" maxlength="300" rows="4" required></textarea></div>
+    <fieldset class="component-fieldset"><legend>Conferência dos componentes</legend><p>Informe a presença e o estado de todos os componentes.</p><div id="component-fields" class="component-grid"></div></fieldset>
+    <div class="dialog-actions"><button class="btn outline" type="button" data-maintenance-close>Cancelar</button><button class="btn primary" type="submit">Concluir manutenção</button></div>
+  </form></dialog>
+
+  <dialog id="delivery-dialog" aria-labelledby="delivery-title"><form id="delivery-form" method="post">
+    <div class="dialog-title"><h2 id="delivery-title">Registrar entrega</h2><button class="close" type="button" data-maintenance-close aria-label="Fechar">×</button></div><p id="delivery-number" class="intro"></p><p class="error" role="alert" hidden></p>
+    <div class="field"><label for="search-by">Entregue e conferido por</label><input id="search-by" name="search_by" maxlength="50" required></div>
+    <div class="field"><label for="delivered-by">Quem realizou a entrega</label><select id="delivered-by" name="delivered_by" required><option value="">Selecione</option>{% for pessoa in usuarios_sec %}<option value="{{ pessoa.pk }}">{{ pessoa }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="delivery-date">Data da entrega</label><input id="delivery-date" name="delivery_date" type="date" required></div>
+    <div class="dialog-actions"><button class="btn outline" type="button" data-maintenance-close>Cancelar</button><button class="btn primary" type="submit">Confirmar entrega</button></div>
+  </form></dialog>
+
+  <dialog id="sheet-details-dialog" aria-labelledby="sheet-details-title"><div class="dialog-title"><h2 id="sheet-details-title">Detalhes da ficha</h2><button class="close" type="button" data-maintenance-close aria-label="Fechar">×</button></div><div id="sheet-details"></div><div class="dialog-actions"><button class="btn outline" type="button" data-maintenance-close>Fechar</button></div></dialog>
+</div>
+{% endblock %}
+{% block script %}<script src="{% static 'js/maintenance.js' %}?v=20261113-permissions2" defer></script>{% endblock %}

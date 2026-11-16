@@ -9,7 +9,7 @@ class MaintenanceSheet(models.Model):
     DELIVERED = "DLV"
     STATUS_CHOICES = (
         (RECEIVED, "Recebido"),
-        (IN_MAINTENANCE, "Manutencão Feita"),
+        (IN_MAINTENANCE, "Manutenção feita"),
         (DELIVERED, "Entregue"),
     )
 
@@ -88,6 +88,18 @@ class MaintenanceSheet(models.Model):
         "Data da entrega",
         null=True,
         blank=True,
+    )
+    technical_report = models.FileField(
+        "Laudo técnico",
+        upload_to="laudos/%Y/%m/",
+        null=True,
+        blank=True,
+    )
+    report_generated_at = models.DateTimeField(
+        "Laudo gerado em",
+        null=True,
+        blank=True,
+        editable=False,
     )
 
     class Meta:

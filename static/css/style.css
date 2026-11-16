@@ -489,7 +489,8 @@ th:first-child {
   gap: 6px;
 }
 
-.actions button {
+.actions button,
+.actions a {
   font-size: 10px;
   border: 1px solid #d6e7dd;
   border-radius: 6px;
@@ -497,10 +498,40 @@ th:first-child {
   background: #f1f8f4;
   color: var(--green);
   font-weight: 600;
+  text-decoration: none;
 }
 
-.actions button:hover:enabled {
+.actions button:hover:enabled,
+.actions a:hover {
   background: #deefe4;
+}
+
+.actions .report-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 31px;
+  border: 1px solid #9fcdb2;
+  border-radius: 6px;
+  padding: 7px 10px;
+  background: #e7f5ed;
+  color: #087443;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color .15s, border-color .15s;
+}
+
+.actions .report-link:hover {
+  border-color: #77b792;
+  background: #d7eddf;
+}
+
+.actions .report-link:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 2px;
 }
 
 .empty {
@@ -1001,6 +1032,16 @@ dd {
   border-bottom: 1px solid var(--line);
 }
 .component-summary small { color: var(--muted); }
+.report-access {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  border-top: 1px solid var(--line);
+  margin-top: 22px;
+  padding-top: 18px;
+}
+.report-access .report-link { text-decoration: none; }
+.report-unavailable { margin: 0; color: var(--muted); font-size: 12px; }
 #receipt-dialog { width: min(920px, calc(100% - 24px)); }
 #sheet-details-dialog { width: min(760px, calc(100% - 24px)); }
 #sheet-details h3 { margin: 24px 0 10px; }

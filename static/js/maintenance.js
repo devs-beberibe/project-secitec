@@ -5,7 +5,7 @@
   const $ = selector => document.querySelector(selector);
   const auth = window.SECITECAuth;
   let sheets = [], components = [], selected = null, busy = false;
-  let statusFilter = "ALL", canPerform = false, noticeTimer;
+  let statusFilter = "ALL", canPerform = false, canGenerateReport = false, noticeTimer;
   const statusNames = {RCV: "Recebido", MNT: "Manutenção feita", DLV: "Entregue"};
   const today = () => { const value = new Date(); return `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, "0")}-${String(value.getDate()).padStart(2, "0")}`; };
   const date = value => value ? String(value).slice(0, 10).split("-").reverse().join("/") : "—";
@@ -26,6 +26,32 @@
   function formError(form, message = "") { const target = form.querySelector(".error"); target.textContent = message; target.hidden = !message; }
   function notice(message) { const target = $("#maintenance-notification"); target.textContent = message; target.hidden = false; clearTimeout(noticeTimer); noticeTimer = setTimeout(() => { target.hidden = true; }, 5500); }
   function node(tag, className, value) { const item = document.createElement(tag); if (className) item.className = className; if (value !== undefined) item.textContent = value; return item; }
+  function reportLink(sheet, label = "Abrir laudo") {
+    if (!sheet.report_available || !sheet.report_url) return null;
+    const link = node("a", "report-link", label);
+    link.href = sheet.report_url;
+    link.target = "_blank";
+    link.rel = "noopener";
+    return link;
+  }
+  async function generateReport(sheet, button) {
+    if (busy || !canGenerateReport) return;
+    busy = true;
+    const label = button.textContent;
+    button.disabled = true;
+    button.textContent = "Gerando…";
+    try {
+      await api(`${root.dataset.sheetsUrl}${encodeURIComponent(sheet.id)}/gerar-laudo/`, {method: "POST", body: "{}"});
+      notice(`Laudo da ficha #${sheet.id} gerado com sucesso.`);
+      await load();
+    } catch (error) {
+      notice(error.message);
+    } finally {
+      busy = false;
+      button.disabled = false;
+      button.textContent = label;
+    }
+  }
 
   function render() {
     const query = $("#sheet-search").value.trim().toLocaleLowerCase("pt-BR");
@@ -39,6 +65,8 @@
       const actions = node("td"), group = node("div", "actions");
       if (status === "RCV" && canPerform) { const button = node("button", "", "Realizar manutenção"); button.type = "button"; button.addEventListener("click", () => openMaintenance(sheet)); group.append(button); }
       if (status === "MNT") { const button = node("button", "", "Registrar entrega"); button.type = "button"; button.addEventListener("click", () => openDelivery(sheet)); group.append(button); }
+      if ((status === "MNT" || status === "DLV") && !sheet.report_available && canGenerateReport) { const button = node("button", "", "Gerar laudo"); button.type = "button"; button.addEventListener("click", () => generateReport(sheet, button)); group.append(button); }
+      const report = reportLink(sheet, "Ver laudo"); if (report) group.append(report);
       actions.append(group);
       const cells = [main, node("td", "", sheet.sector_name), node("td", "", sheet.pc_responsible), node("td", "", date(sheet.receipt_date)), situation, actions];
       ["Ficha / equipamento", "Setor", "Responsável", "Recebimento", "Situação", "Ações"].forEach((label, index) => { cells[index].dataset.label = label; }); row.append(...cells); body.append(row);
@@ -71,6 +99,7 @@
     const target = $("#sheet-details"); target.replaceChildren(); const list = node("dl", "sheet-detail-list");
     [["Situação", statusNames[statusOf(sheet)]], ["Tombo/série", sheet.serial_number || "Não informado"], ["Secretaria / setor", `${sheet.secretary_name} / ${sheet.sector_name}`], ["Responsável", sheet.pc_responsible], ["Contato", sheet.contact], ["Problema", sheet.problem_description], ["Observações", sheet.observation || "Não informada"], ["Recebido em", date(sheet.receipt_date)], ["Recebido por", sheet.receipt_name], ["Técnico", sheet.technician_name || "Ainda não atribuído"], ["Serviço realizado", sheet.realized_service || "Não informado"], ["Entrega", date(sheet.delivery_date)], ["Conferido por", sheet.search_by || "Não informado"], ["Entregue por", sheet.delivered_by_name || "Não informado"]].forEach(([label, value]) => list.append(node("dt", "", label), node("dd", "", value)));
     target.append(list); if ((sheet.components_status || []).length) { target.append(node("h3", "", "Componentes")); const summary = node("div", "component-summary"); sheet.components_status.forEach(item => { const row = node("div"); row.append(node("strong", "", item.component.name), node("span", "", item.status_label), node("small", "", item.description_report || "Sem observação")); summary.append(row); }); target.append(summary); }
+    const report = reportLink(sheet, "Abrir laudo técnico"); if (report) { const access = node("div", "report-access"); report.classList.add("btn", "outline"); access.append(report); target.append(access); }
     $("#sheet-details-title").textContent = `Ficha #${sheet.id}`; $("#sheet-details-dialog").showModal();
   }
   async function submit(form, url, payload, success) {
@@ -84,5 +113,5 @@
   document.querySelectorAll("[data-maintenance-close]").forEach(button => button.addEventListener("click", () => { if (!busy) button.closest("dialog").close(); }));
   document.querySelectorAll("[data-sheet-status]").forEach(button => button.addEventListener("click", () => { statusFilter = button.dataset.sheetStatus; document.querySelectorAll("[data-sheet-status]").forEach(item => { item.classList.toggle("active", item === button); item.setAttribute("aria-pressed", String(item === button)); }); render(); }));
   $("#sheet-search").addEventListener("input", render); $("#refresh-sheets").addEventListener("click", load);
-  auth.ready.then(user => { if (!user) return location.replace($("#auth-config").dataset.homeUrl || "/"); const names = Array.isArray(user.groups) ? user.groups : []; const technician = names.includes("Tecnico"); const administrative = names.includes("Administrativo"); canPerform = technician || user.capabilities?.maintenance_perform === true; const canReceive = technician || administrative || user.capabilities?.maintenance_receive === true || user.capabilities?.maintenance_start === true; $("#new-sheet").hidden = !canReceive; load(); });
+  auth.ready.then(user => { if (!user) return location.replace($("#auth-config").dataset.homeUrl || "/"); const names = Array.isArray(user.groups) ? user.groups : []; const technician = names.includes("Tecnico"); const administrative = names.includes("Administrativo"); canPerform = technician || user.capabilities?.maintenance_perform === true; const canReceive = technician || administrative || user.capabilities?.maintenance_receive === true || user.capabilities?.maintenance_start === true; canGenerateReport = technician || administrative || user.capabilities?.maintenance_view === true; $("#new-sheet").hidden = !canReceive; load(); });
 })();

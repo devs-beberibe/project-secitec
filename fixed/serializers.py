@@ -1,6 +1,7 @@
 from django.db import transaction
 from django.utils import timezone
 from rest_framework import serializers
+from rest_framework.reverse import reverse
 
 from core.models import Tecs, User_sec
 
@@ -78,6 +79,16 @@ class MaintenanceSheetSerializer(serializers.ModelSerializer):
         source="get_status_display",
         read_only=True,
     )
+    report_available = serializers.SerializerMethodField()
+    report_url = serializers.SerializerMethodField()
+
+    def get_report_available(self, obj):
+        return bool(obj.technical_report)
+
+    def get_report_url(self, obj):
+        if not obj.technical_report:
+            return None
+        return reverse("ficha-manutencao-laudo", kwargs={"pk": obj.pk})
 
     class Meta:
         model = MaintenanceSheet
@@ -105,6 +116,9 @@ class MaintenanceSheetSerializer(serializers.ModelSerializer):
             "delivered_by",
             "delivered_by_name",
             "delivery_date",
+            "report_available",
+            "report_url",
+            "report_generated_at",
         )
 
 
@@ -183,6 +197,9 @@ class MaintenanceSerializer(serializers.ModelSerializer):
             "realized_service",
             "status",
         ))
+        # Fichas criadas pelo fluxo antigo podem já possuir a conferência.
+        # Nesse caso atualizamos os registros, evitando violar a constraint
+        # de um único status por ficha/componente.
         for item in statuses:
             component = item.pop("component")
             ComponentStatus.objects.update_or_create(
@@ -264,6 +281,16 @@ class PublicTrackingSerializer(serializers.ModelSerializer):
         source="technician",
         read_only=True,
     )
+    report_available = serializers.SerializerMethodField()
+    report_url = serializers.SerializerMethodField()
+
+    def get_report_available(self, obj):
+        return bool(obj.technical_report)
+
+    def get_report_url(self, obj):
+        if not obj.technical_report:
+            return None
+        return reverse("ficha-manutencao-laudo-publico", kwargs={"pk": obj.pk})
 
     class Meta:
         model = MaintenanceSheet
@@ -281,4 +308,6 @@ class PublicTrackingSerializer(serializers.ModelSerializer):
             "observation",
             "components_status",
             "delivery_date",
+            "report_available",
+            "report_url",
         )

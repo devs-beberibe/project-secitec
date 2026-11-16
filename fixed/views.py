@@ -1,8 +1,9 @@
 from django.db import transaction
 from django.db.models import Q
+from django.http import FileResponse
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
-from rest_framework.exceptions import NotFound, ValidationError
+from rest_framework.exceptions import APIException, NotFound, ValidationError
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -20,6 +21,17 @@ from .serializers import (
     PublicTrackingSerializer,
     ReceiptSerializer,
 )
+from .services.report_generator import generate_technical_report
+
+
+REPORT_CONTENT_TYPE = (
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+)
+
+
+class ReportGenerationError(APIException):
+    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+    default_detail = "Não foi possível gerar o laudo técnico."
 
 
 class MaintenanceSheetViewSet(
@@ -60,8 +72,17 @@ class MaintenanceSheetViewSet(
         return queryset
 
     def get_permissions(self):
-        if self.action in ("public_tracking", "public_search", "components"):
+        if self.action in (
+            "public_tracking",
+            "public_search",
+            "public_report",
+            "components",
+        ):
             return [AllowAny()]
+        if self.action == "report":
+            return [IsAuthenticated()]
+        if self.action == "generate_report":
+            return [IsAuthenticated(), IsAdministrativeOrTechnician()]
         if self.action == "recebimento":
             return [IsAuthenticated(), IsAdministrativeOrTechnician()]
         if self.action == "manutencao":
@@ -161,3 +182,65 @@ class MaintenanceSheetViewSet(
     def components(self, request):
         queryset = Components.objects.filter(active=True)
         return Response(self.get_serializer(queryset, many=True).data)
+
+    def _report_response(self, sheet):
+        if not sheet.technical_report:
+            raise NotFound("O laudo desta ficha ainda não foi gerado.")
+        try:
+            report_file = sheet.technical_report.open("rb")
+        except (FileNotFoundError, OSError) as error:
+            raise NotFound("O arquivo do laudo não foi encontrado.") from error
+        filename = f"Laudo {sheet.pk}.docx"
+        return FileResponse(
+            report_file,
+            as_attachment=False,
+            filename=filename,
+            content_type=REPORT_CONTENT_TYPE,
+        )
+
+    @action(
+        detail=True,
+        methods=("get",),
+        url_path="laudo",
+        url_name="laudo",
+    )
+    def report(self, request, pk=None):
+        return self._report_response(self.get_object())
+
+    @action(
+        detail=True,
+        methods=("get",),
+        url_path="laudo-publico",
+        url_name="laudo-publico",
+    )
+    def public_report(self, request, pk=None):
+        return self._report_response(self.get_object())
+
+    @action(
+        detail=True,
+        methods=("post",),
+        url_path="gerar-laudo",
+        url_name="gerar-laudo",
+    )
+    @transaction.atomic
+    def generate_report(self, request, pk=None):
+        sheet = (
+            MaintenanceSheet.objects
+            .select_for_update()
+            .get(pk=self.get_object().pk)
+        )
+        if sheet.status == MaintenanceSheet.RECEIVED:
+            raise ValidationError(
+                {"detail": "Realize a manutenção antes de gerar o laudo."}
+            )
+        try:
+            generate_technical_report(sheet)
+        except Exception as error:
+            raise ReportGenerationError() from error
+        sheet = self.get_queryset().get(pk=sheet.pk)
+        return Response(
+            MaintenanceSheetSerializer(
+                sheet,
+                context=self.get_serializer_context(),
+            ).data
+        )

@@ -41,7 +41,7 @@
         add(list, "Recebimento", formatDate(sheet.receipt_date)); add(list, "Entrega", formatDate(sheet.delivery_date));
         const hint = document.createElement("span");
         hint.className = "tracking-sheet-hint";
-        hint.textContent = "Clique para ver detalhes →";
+        hint.textContent = "Clique para ver detalhes e componentes →";
         heading.append(title, badge); card.append(heading, list, hint);
         card.addEventListener("click", () => showDetails(sheet));
         card.addEventListener("keydown", event => {
@@ -98,8 +98,24 @@
         })
       );
     }
+    const reportBox = document.createElement("div");
+    reportBox.className = "report-access";
+    if (sheet.report_available && sheet.report_url) {
+      const report = document.createElement("a");
+      report.className = "btn outline report-link";
+      report.href = sheet.report_url;
+      report.target = "_blank";
+      report.rel = "noopener";
+      report.textContent = "Abrir laudo técnico";
+      reportBox.append(report);
+    } else {
+      const unavailable = document.createElement("p");
+      unavailable.className = "report-unavailable";
+      unavailable.textContent = "O laudo estará disponível após a manutenção.";
+      reportBox.append(unavailable);
+    }
     title.textContent = `Ficha #${sheet.id}`;
-    target.replaceChildren(list, componentTitle, componentList);
+    target.replaceChildren(list, componentTitle, componentList, reportBox);
     document.getElementById("tracking-details-dialog").showModal();
   }
 
